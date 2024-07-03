@@ -12,14 +12,25 @@ const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
+// Screen size
 const size = {
-	width: 800,
-	height: 600
+	width: window.innerWidth,
+	height: window.innerHeight
 }
+window.addEventListener('resize', () =>
+{
+	size.width = window.innerWidth
+	size.height = window.innerHeight
+
+	camera.aspect = size.width / size.height
+	camera.updateProjectionMatrix()
+
+	renderer.setSize(size.width, size.height)
+})
 
 // Camera
-const camera = new THREE.PerspectiveCamera(30, size.width/size.height)
-camera.position.z = 5;
+const camera = new THREE.PerspectiveCamera(45, size.width/size.height)
+camera.position.z = 10;
 scene.add(camera)
 
 // Renderer
