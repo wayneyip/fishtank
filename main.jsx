@@ -24,16 +24,31 @@ class Boid
 		mesh.position.y = randomNumber(-spawnRange, spawnRange)
 		mesh.position.z = randomNumber(-spawnRange, spawnRange)
 
-		this.velocity = new THREE.Vector3(1, 1, 1); 
+		this.aim = new THREE.Vector3(0,0,0)
+		this.velocity = new THREE.Vector3(0, 0.1, 0); 
+		this.up = new THREE.Vector3(0,1,0); 
+	}
+
+	move()
+	{
+		this.mesh.position.x += this.velocity.x;
+		this.mesh.position.y += this.velocity.y;
+		this.mesh.position.z += this.velocity.z;
+
+		this.aim.copy(this.mesh.position).add(this.velocity);
+		this.mesh.lookAt(this.aim);
 	}
 } 
 
 // Geometry
 const geometry = new THREE.ConeGeometry(1, 2)
+geometry.rotateX(0.5 * Math.PI)
 const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
+
+// Boids 
 var boids = []
 const boidScale = 0.1;
-const spawnRange = 3;
+const spawnRange = 1;
 const boidCount = 100;
 
 function randomNumber(min, max) 
@@ -48,7 +63,7 @@ for (let i=0; i < boidCount; i++)
 	scene.add(boid.mesh)
 	boids.push(boid)
 }
-dirLight.target = boids[25].mesh
+dirLight.target = boids[3].mesh
 
 // Screen size
 const size = {
@@ -79,14 +94,54 @@ renderer.setSize(size.width, size.height)
 
 const clock = new THREE.Clock()
 
+var perceivedCenter = new THREE.Vector3(0,0,0)
+var perceivedVelocity = new THREE.Vector3(0,0,0)
+var displacement = new THREE.Vector3(0,0,0)
+var vectorTo = new THREE.Vector3(0,0,0)
+
 // Animations
 const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
 
-	// Update objects
+	// Update boids
+
 	for (let boid of boids)
 	{
+		perceivedCenter.set(0, 0, 0)
+		perceivedVelocity.set(0, 0, 0)
+		displacement.set(0, 0, 0)
+
+		for (let otherboid of boids)
+		{
+			if (boid != otherboid) 
+			{
+				// Cohesion
+				perceivedCenter.add(otherboid.mesh.position)
+				
+				// Alignment
+				perceivedVelocity.add(otherboid.velocity)
+				
+				// Separation
+				if (boid.mesh.position.distanceTo(otherboid.mesh.position) < .5)
+				{
+					vectorTo.subVectors(otherboid.mesh.position, boid.mesh.position)
+					displacement.sub(vectorTo)
+				}
+			}
+		}
+		perceivedCenter.divideScalar(boids.length - 1)
+		perceivedVelocity.divideScalar(boids.length - 1)
+		const cohesionVec = perceivedCenter.sub(boid.mesh.position).multiplyScalar(0.001);
+		const alignmentVec = perceivedVelocity.sub(boid.velocity).multiplyScalar(0.125)
+		const separationVec = displacement.multiplyScalar(.01)
+
+		boid.velocity.add(cohesionVec);
+		boid.velocity.add(alignmentVec);
+		boid.velocity.add(separationVec);
+		boid.velocity.clampLength(0, 0.03)
+		
+		boid.move();
 	}
 
 	// Render
