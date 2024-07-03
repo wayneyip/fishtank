@@ -10,6 +10,24 @@ scene.add(dirLight)
 const ambLight = new THREE.AmbientLight()
 scene.add(ambLight)
 
+class Boid
+{
+	constructor(mesh, scale, spawnRange)
+	{
+		this.mesh = mesh
+
+		mesh.scale.x = boidScale
+		mesh.scale.y = boidScale
+		mesh.scale.z = boidScale
+
+		mesh.position.x = randomNumber(-spawnRange, spawnRange) 
+		mesh.position.y = randomNumber(-spawnRange, spawnRange)
+		mesh.position.z = randomNumber(-spawnRange, spawnRange)
+
+		this.velocity = new THREE.Vector3(1, 1, 1); 
+	}
+} 
+
 // Geometry
 const geometry = new THREE.ConeGeometry(1, 2)
 const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
@@ -17,7 +35,6 @@ var boids = []
 const boidScale = 0.1;
 const spawnRange = 3;
 const boidCount = 100;
-const boidVelocity = new THREE.Vector3(1, 1, 1);
 
 function randomNumber(min, max) 
 {
@@ -26,20 +43,12 @@ function randomNumber(min, max)
 
 for (let i=0; i < boidCount; i++)
 {
-	const boid = new THREE.Mesh(geometry, material)	
-	boid.scale.x = boidScale;
-	boid.scale.y = boidScale;
-	boid.scale.z = boidScale;
-	const x = randomNumber(-spawnRange, spawnRange)
-	const y = randomNumber(-spawnRange, spawnRange)
-	const z = randomNumber(-spawnRange, spawnRange)
-	boid.position.x = x; 
-	boid.position.y = y; 
-	boid.position.z = z; 
-	scene.add(boid)
+	const mesh = new THREE.Mesh(geometry, material)	
+	const boid = new Boid(mesh, boidScale, spawnRange)
+	scene.add(boid.mesh)
 	boids.push(boid)
 }
-dirLight.target = boids[25]
+dirLight.target = boids[25].mesh
 
 // Screen size
 const size = {
