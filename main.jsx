@@ -18,10 +18,13 @@ geometry.rotateX(0.5 * Math.PI)
 const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
 
 // Boids 
-const boidScale = 0.1;
-const spawnRange = 2;
-const boidCount = 200;
-var boidGroup = new BoidGroup(scene, geometry, material, boidCount, boidScale, spawnRange)
+const boidCount = 200
+const boidScale = 0.1
+const spawnRange = 2
+var boidGroup = new BoidGroup(
+	scene, geometry, material, 
+	boidCount, boidScale, spawnRange
+)
 
 // Screen size
 const size = {
@@ -41,7 +44,7 @@ window.addEventListener('resize', () =>
 
 // Camera
 const camera = new THREE.PerspectiveCamera(45, size.width/size.height)
-camera.position.z = 10;
+camera.position.z = 10
 scene.add(camera)
 
 // Renderer

@@ -15,6 +15,8 @@ class BoidGroup
 			this.boids.push(boid)
 		}
 		
+		// Cached values 
+		// (for avoiding repeated creation in simulate())
 		this.perceivedCenter = new THREE.Vector3(0,0,0)
 		this.perceivedVelocity = new THREE.Vector3(0,0,0)
 		this.displacement = new THREE.Vector3(0,0,0)
@@ -26,10 +28,10 @@ class BoidGroup
 	{
 		for (let boid of this.boids)
 		{
-			this.perceivedCenter.set(0, 0, 0)
-			this.perceivedVelocity.set(0, 0, 0)
-			this.displacement.set(0, 0, 0)
-			this.boundsAvoidance.set(0, 0, 0)
+			this.perceivedCenter.set(0,0,0)
+			this.perceivedVelocity.set(0,0,0)
+			this.displacement.set(0,0,0)
+			this.boundsAvoidance.set(0,0,0)
 
 			for (let otherboid of this.boids)
 			{
@@ -47,48 +49,49 @@ class BoidGroup
 						this.vectorDiff.subVectors(otherboid.mesh.position, boid.mesh.position)
 						this.displacement.sub(this.vectorDiff)
 					}
-
-					// Avoidance 
-					if (boid.mesh.position.x < -5)
-					{
-						this.boundsAvoidance.x = 1
-					}
-					else if (boid.mesh.position.x > 5)
-					{
-						this.boundsAvoidance.x = -1
-					}
-					if (boid.mesh.position.y < -5)
-					{
-						this.boundsAvoidance.y = 1
-					}
-					else if (boid.mesh.position.y > 5)
-					{
-						this.boundsAvoidance.y = -1
-					}
-					if (boid.mesh.position.z < -5)
-					{
-						this.boundsAvoidance.z = 1
-					}
-					else if (boid.mesh.position.z > 5)
-					{
-						this.boundsAvoidance.z = -1
-					}
-					this.boundsAvoidance.multiplyScalar(0.001)
 				}
 			}
+			// Avoidance 
+			if (boid.mesh.position.x < -5)
+			{
+				this.boundsAvoidance.x = 1
+			}
+			else if (boid.mesh.position.x > 5)
+			{
+				this.boundsAvoidance.x = -1
+			}
+			if (boid.mesh.position.y < -5)
+			{
+				this.boundsAvoidance.y = 1
+			}
+			else if (boid.mesh.position.y > 5)
+			{
+				this.boundsAvoidance.y = -1
+			}
+			if (boid.mesh.position.z < -5)
+			{
+				this.boundsAvoidance.z = 1
+			}
+			else if (boid.mesh.position.z > 5)
+			{
+				this.boundsAvoidance.z = -1
+			}
+			this.boundsAvoidance.multiplyScalar(0.001)
+
 			this.perceivedCenter.divideScalar(this.boids.length - 1)
 			this.perceivedVelocity.divideScalar(this.boids.length - 1)
-			const cohesionVec = this.perceivedCenter.sub(boid.mesh.position).multiplyScalar(0.00005);
+			const cohesionVec = this.perceivedCenter.sub(boid.mesh.position).multiplyScalar(0.00005)
 			const alignmentVec = this.perceivedVelocity.sub(boid.velocity).multiplyScalar(0.03)
 			const separationVec = this.displacement.multiplyScalar(.01)
 
-			boid.velocity.add(cohesionVec);
-			boid.velocity.add(alignmentVec);
-			boid.velocity.add(separationVec);
-			boid.velocity.add(this.boundsAvoidance);
+			boid.velocity.add(cohesionVec)
+			boid.velocity.add(alignmentVec)
+			boid.velocity.add(separationVec)
+			boid.velocity.add(this.boundsAvoidance)
+
 			boid.velocity.clampLength(0, 0.06)
 			
-			boid.move();
+			boid.move()
 		}
 	}
 }

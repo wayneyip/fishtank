@@ -18,9 +18,9 @@ class Boid
 			randomNumber(-0.1,0.1),
 			randomNumber(-0.1,0.1),
 			randomNumber(-0.1,0.1)
-		); 
+		)
 
-		this.aim = new THREE.Vector3(0,0,0);
+		this.aim = new THREE.Vector3(0,0,0)
 	}
 
 	// flock(otherboids)
@@ -32,18 +32,18 @@ class Boid
 
 	move()
 	{
-		this.mesh.position.x += this.velocity.x;
-		this.mesh.position.y += this.velocity.y;
-		this.mesh.position.z += this.velocity.z;
+		this.mesh.position.x += this.velocity.x
+		this.mesh.position.y += this.velocity.y
+		this.mesh.position.z += this.velocity.z
 
-		this.aim.copy(this.mesh.position).add(this.velocity);
-		this.mesh.lookAt(this.aim);
+		this.aim.copy(this.mesh.position).add(this.velocity)
+		this.mesh.lookAt(this.aim)
 	}
 } 
 
 function randomNumber(min, max) 
 {
-	return Math.random() * (max - min) + min;
+	return Math.random() * (max - min) + min
 }
 
 export { Boid }
