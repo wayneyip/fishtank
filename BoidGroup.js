@@ -1,6 +1,13 @@
 import * as THREE from 'three'
 import {Boid} from './Boid'
 
+const cohesionFactor 		= 0.00005
+const alignmentFactor 		= 0.03
+const separationFactor 		= 0.01
+const boundsAvoidanceFactor = 0.001
+const boundsRange 			= 5
+const maxSpeed 				= 0.6
+
 class BoidGroup
 {
 	constructor(scene, boidGeo, boidMat, boidCount, boidScale, spawnRange)
@@ -51,46 +58,54 @@ class BoidGroup
 					}
 				}
 			}
-			// Avoidance 
-			if (boid.mesh.position.x < -5)
+
+			// Average the total position and velocity
+			// to get group's perceived center and velocity
+			this.perceivedCenter.divideScalar(this.boids.length - 1)
+			this.perceivedVelocity.divideScalar(this.boids.length - 1)
+
+			// Calculate flocking vectors
+			const cohesionVec = this.perceivedCenter.sub(boid.mesh.position).multiplyScalar(cohesionFactor)
+			const alignmentVec = this.perceivedVelocity.sub(boid.velocity).multiplyScalar(alignmentFactor)
+			const separationVec = this.displacement.multiplyScalar(separationFactor)
+
+			// Bounds avoidance 
+			if (boid.mesh.position.x < -boundsRange)
 			{
 				this.boundsAvoidance.x = 1
 			}
-			else if (boid.mesh.position.x > 5)
+			else if (boid.mesh.position.x > boundsRange)
 			{
 				this.boundsAvoidance.x = -1
 			}
-			if (boid.mesh.position.y < -5)
+			if (boid.mesh.position.y < -boundsRange)
 			{
 				this.boundsAvoidance.y = 1
 			}
-			else if (boid.mesh.position.y > 5)
+			else if (boid.mesh.position.y > boundsRange)
 			{
 				this.boundsAvoidance.y = -1
 			}
-			if (boid.mesh.position.z < -5)
+			if (boid.mesh.position.z < -boundsRange)
 			{
 				this.boundsAvoidance.z = 1
 			}
-			else if (boid.mesh.position.z > 5)
+			else if (boid.mesh.position.z > boundsRange)
 			{
 				this.boundsAvoidance.z = -1
 			}
-			this.boundsAvoidance.multiplyScalar(0.001)
+			this.boundsAvoidance.multiplyScalar(boundsAvoidanceFactor)
 
-			this.perceivedCenter.divideScalar(this.boids.length - 1)
-			this.perceivedVelocity.divideScalar(this.boids.length - 1)
-			const cohesionVec = this.perceivedCenter.sub(boid.mesh.position).multiplyScalar(0.00005)
-			const alignmentVec = this.perceivedVelocity.sub(boid.velocity).multiplyScalar(0.03)
-			const separationVec = this.displacement.multiplyScalar(.01)
-
+			// Apply all steerings to boid's velocity
 			boid.velocity.add(cohesionVec)
 			boid.velocity.add(alignmentVec)
 			boid.velocity.add(separationVec)
 			boid.velocity.add(this.boundsAvoidance)
 
-			boid.velocity.clampLength(0, 0.06)
+			// Limit boid velocity
+			boid.velocity.clampLength(0, maxSpeed)
 			
+			// Move boid using updated velocity
 			boid.move()
 		}
 	}

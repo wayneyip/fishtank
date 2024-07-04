@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 
+const initialMaxSpeed = 0.1
+
 class Boid
 {
 	constructor(mesh, scale, spawnRange)
@@ -15,20 +17,13 @@ class Boid
 		mesh.position.z = randomNumber(-spawnRange, spawnRange)
 
 		this.velocity = new THREE.Vector3(
-			randomNumber(-0.1,0.1),
-			randomNumber(-0.1,0.1),
-			randomNumber(-0.1,0.1)
+			randomNumber(-initialMaxSpeed, initialMaxSpeed),
+			randomNumber(-initialMaxSpeed, initialMaxSpeed),
+			randomNumber(-initialMaxSpeed, initialMaxSpeed)
 		)
 
 		this.aim = new THREE.Vector3(0,0,0)
 	}
-
-	// flock(otherboids)
-	// {
-	// 	v1 = cohesion(otherboids)
-	// 	v2 = alignment(otherboids)
-	// 	v3 = separation(otherboids)
-	// }
 
 	move()
 	{
