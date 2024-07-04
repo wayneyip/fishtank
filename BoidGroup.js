@@ -4,6 +4,7 @@ import {Boid} from './Boid'
 const cohesionFactor 		= 0.00005
 const alignmentFactor 		= 0.03
 const separationFactor 		= 0.01
+const separationDistance	= 0.5
 const boundsAvoidanceFactor = 0.001
 const boundsRange 			= 5
 const maxSpeed 				= 0.6
@@ -51,7 +52,7 @@ class BoidGroup
 					this.perceivedVelocity.add(otherboid.velocity)
 					
 					// Separation
-					if (boid.mesh.position.distanceTo(otherboid.mesh.position) < .5)
+					if (boid.mesh.position.distanceTo(otherboid.mesh.position) < separationDistance)
 					{
 						this.vectorDiff.subVectors(otherboid.mesh.position, boid.mesh.position)
 						this.displacement.sub(this.vectorDiff)
