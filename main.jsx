@@ -24,9 +24,13 @@ class Boid
 		mesh.position.y = randomNumber(-spawnRange, spawnRange)
 		mesh.position.z = randomNumber(-spawnRange, spawnRange)
 
-		this.aim = new THREE.Vector3(0,0,0)
-		this.velocity = new THREE.Vector3(0, 0.1, 0); 
+		this.aim = new THREE.Vector3(0,0,0);
 		this.up = new THREE.Vector3(0,1,0); 
+		this.velocity = new THREE.Vector3(
+			randomNumber(-0.1,0.1),
+			randomNumber(-0.1,0.1),
+			randomNumber(-0.1,0.1)
+		); 
 	}
 
 	move()
@@ -48,8 +52,8 @@ const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
 // Boids 
 var boids = []
 const boidScale = 0.1;
-const spawnRange = 1;
-const boidCount = 100;
+const spawnRange = 2;
+const boidCount = 200;
 
 function randomNumber(min, max) 
 {
@@ -97,7 +101,8 @@ const clock = new THREE.Clock()
 var perceivedCenter = new THREE.Vector3(0,0,0)
 var perceivedVelocity = new THREE.Vector3(0,0,0)
 var displacement = new THREE.Vector3(0,0,0)
-var vectorTo = new THREE.Vector3(0,0,0)
+var vectorDiff = new THREE.Vector3(0,0,0)
+var boundsAvoidance = new THREE.Vector3(0,0,0)
 
 // Animations
 const tick = () => {
@@ -111,6 +116,7 @@ const tick = () => {
 		perceivedCenter.set(0, 0, 0)
 		perceivedVelocity.set(0, 0, 0)
 		displacement.set(0, 0, 0)
+		boundsAvoidance.set(0, 0, 0)
 
 		for (let otherboid of boids)
 		{
@@ -125,21 +131,49 @@ const tick = () => {
 				// Separation
 				if (boid.mesh.position.distanceTo(otherboid.mesh.position) < .5)
 				{
-					vectorTo.subVectors(otherboid.mesh.position, boid.mesh.position)
-					displacement.sub(vectorTo)
+					vectorDiff.subVectors(otherboid.mesh.position, boid.mesh.position)
+					displacement.sub(vectorDiff)
 				}
+
+				// Avoidance 
+				if (boid.mesh.position.x < -5)
+				{
+					boundsAvoidance.x = 1
+				}
+				else if (boid.mesh.position.x > 5)
+				{
+					boundsAvoidance.x = -1
+				}
+				if (boid.mesh.position.y < -5)
+				{
+					boundsAvoidance.y = 1
+				}
+				else if (boid.mesh.position.y > 5)
+				{
+					boundsAvoidance.y = -1
+				}
+				if (boid.mesh.position.z < -5)
+				{
+					boundsAvoidance.z = 1
+				}
+				else if (boid.mesh.position.z > 5)
+				{
+					boundsAvoidance.z = -1
+				}
+				boundsAvoidance.multiplyScalar(0.001)
 			}
 		}
 		perceivedCenter.divideScalar(boids.length - 1)
 		perceivedVelocity.divideScalar(boids.length - 1)
-		const cohesionVec = perceivedCenter.sub(boid.mesh.position).multiplyScalar(0.001);
-		const alignmentVec = perceivedVelocity.sub(boid.velocity).multiplyScalar(0.125)
+		const cohesionVec = perceivedCenter.sub(boid.mesh.position).multiplyScalar(0.00005);
+		const alignmentVec = perceivedVelocity.sub(boid.velocity).multiplyScalar(0.03)
 		const separationVec = displacement.multiplyScalar(.01)
 
 		boid.velocity.add(cohesionVec);
 		boid.velocity.add(alignmentVec);
 		boid.velocity.add(separationVec);
-		boid.velocity.clampLength(0, 0.03)
+		boid.velocity.add(boundsAvoidance);
+		boid.velocity.clampLength(0, 0.06)
 		
 		boid.move();
 	}
