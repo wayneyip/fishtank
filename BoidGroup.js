@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import {Boid} from './Boid'
 
 const cohesionFactor 		= 0.00005
-const alignmentFactor 		= 0.03
+const alignmentFactor 		= 0.01
 const separationFactor 		= 0.01
 const separationDistance	= 0.5
 const boundsAvoidanceFactor = 0.001
