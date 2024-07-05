@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 
 const canvas = document.querySelector('canvas.webgl')
 
@@ -13,18 +14,33 @@ const ambLight = new THREE.AmbientLight()
 scene.add(ambLight)
 
 // Geometry
-const geometry = new THREE.ConeGeometry(1, 2)
-geometry.rotateX(0.5 * Math.PI)
-const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
+// const geometry = new THREE.ConeGeometry(1, 2)
+// geometry.rotateX(0.5 * Math.PI)
+// const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
 
-// Boids 
-const boidCount = 200
-const boidScale = 0.1
-const spawnRange = 2
-var boidGroup = new BoidGroup(
-	scene, geometry, material, 
-	boidCount, boidScale, spawnRange
+var boidGroup = null
+const gltfLoader = new GLTFLoader()
+gltfLoader.load(
+	'static/fish.glb',
+	(gltf) =>
+	{
+		const mesh = gltf.scene.children[0]
+		const geometry = mesh.geometry 
+		geometry.rotateY(0.5 * Math.PI)
+		const material = mesh.material 
+
+		// Boids 
+		const boidCount = 200
+		const boidScale = 0.001
+		const spawnRange = 2
+		boidGroup = new BoidGroup(
+			scene, geometry, material, 
+			boidCount, boidScale, spawnRange
+		)
+
+	}
 )
+
 
 // Screen size
 const size = {
@@ -60,7 +76,10 @@ const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
 
-	boidGroup.simulate()
+	if (boidGroup)
+	{
+		boidGroup.simulate()
+	}
 
 	// Render
 	renderer.render(scene, camera)
