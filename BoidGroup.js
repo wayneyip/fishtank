@@ -6,8 +6,8 @@ const alignmentFactor 		= 0.03
 const separationFactor 		= 0.01
 const separationDistance	= 0.5
 const boundsAvoidanceFactor = 0.001
-const boundsRange 			= 5
-const maxSpeed 				= 0.6
+const boundsRange 			= 3
+const maxSpeed 				= 0.05
 
 class BoidGroup
 {
