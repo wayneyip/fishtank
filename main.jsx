@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
+import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
 
 const canvas = document.querySelector('canvas.webgl')
 
@@ -19,16 +20,25 @@ scene.add(ambLight)
 // const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
 
 var boidGroup = null
+
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('static/draco/')
+
 const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+const textureLoader = new THREE.TextureLoader()
+
 gltfLoader.load(
-	'static/fish.glb',
+	'static/fish.gltf',
 	(gltf) =>
 	{
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		geometry.rotateY(0.5 * Math.PI)
-		const material = mesh.material 
-
+		var material = mesh.material 
+		material.map = textureLoader.load('static/fish_c.png')
+		
 		// Boids 
 		const boidCount = 200
 		const boidScale = 0.001
@@ -37,7 +47,6 @@ gltfLoader.load(
 			scene, geometry, material, 
 			boidCount, boidScale, spawnRange
 		)
-
 	}
 )
 
