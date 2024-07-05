@@ -1,16 +1,30 @@
 import * as THREE from 'three'
+import {BoidGroup} from './BoidGroup'
+
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
 
 // Lighting
+const dirLight = new THREE.DirectionalLight()
+scene.add(dirLight)
+const ambLight = new THREE.AmbientLight()
+scene.add(ambLight)
 
 // Geometry
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-const mesh = new THREE.Mesh(geometry, material)
-scene.add(mesh)
+const geometry = new THREE.ConeGeometry(1, 2)
+geometry.rotateX(0.5 * Math.PI)
+const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
+
+// Boids 
+const boidCount = 200
+const boidScale = 0.1
+const spawnRange = 2
+var boidGroup = new BoidGroup(
+	scene, geometry, material, 
+	boidCount, boidScale, spawnRange
+)
 
 // Screen size
 const size = {
@@ -30,7 +44,7 @@ window.addEventListener('resize', () =>
 
 // Camera
 const camera = new THREE.PerspectiveCamera(45, size.width/size.height)
-camera.position.z = 10;
+camera.position.z = 10
 scene.add(camera)
 
 // Renderer
@@ -46,8 +60,7 @@ const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
 
-	// Update objects
-	mesh.position.y = Math.sin(elapsedTime)
+	boidGroup.simulate()
 
 	// Render
 	renderer.render(scene, camera)
