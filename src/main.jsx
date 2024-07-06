@@ -2,6 +2,8 @@ import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
+import testVertexShader from './shaders/vertex.glsl'
+import testFragmentShader from './shaders/fragment.glsl'
 
 const canvas = document.querySelector('canvas.webgl')
 
@@ -36,7 +38,10 @@ gltfLoader.load(
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		geometry.rotateY(0.5 * Math.PI)
-		var material = new THREE.MeshPhongMaterial()
+		var material = new THREE.RawShaderMaterial({
+			vertexShader: testVertexShader,
+			fragmentShader: testFragmentShader
+		})
 		
 		// Boids 
 		const boidCount = 100
