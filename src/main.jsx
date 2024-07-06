@@ -30,6 +30,11 @@ const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
 const textureLoader = new THREE.TextureLoader()
+const fishTexture = textureLoader.load('fish_c.png')
+const fishAlpha = textureLoader.load('fish_a.png')
+fishTexture.flipY = false
+fishAlpha.flipY = false
+var material = null
 
 gltfLoader.load(
 	'/fish.gltf',
@@ -38,14 +43,21 @@ gltfLoader.load(
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		geometry.rotateY(0.5 * Math.PI)
-		var material = new THREE.RawShaderMaterial({
+		material = new THREE.RawShaderMaterial({
 			vertexShader: testVertexShader,
-			fragmentShader: testFragmentShader
+			fragmentShader: testFragmentShader,
+			uniforms: 
+			{
+				uFrequency: { value: 100 },
+				uTime: { value: 0 },
+				uMap: { value: fishTexture },
+				uAlpha: { value: fishAlpha }
+			}
 		})
 		
 		// Boids 
 		const boidCount = 100
-		const boidScale = 0.001
+		const boidScale = .001 //0.001
 		const spawnRange = 2
 		boidGroup = new BoidGroup(
 			scene, geometry, material, 
@@ -88,6 +100,12 @@ const clock = new THREE.Clock()
 const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
+
+	if (material)
+	{
+		material.uniforms.uTime.value = elapsedTime
+		// console.log(material.uniforms.uTime.value)
+	}
 
 	if (boidGroup)
 	{
