@@ -2,7 +2,9 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
-uniform float uFrequency;
+uniform float uAmplitude;
+uniform float uWavelength;
+uniform float uWaveSpeed;
 uniform float uTime;
 
 attribute vec3 position;
@@ -14,7 +16,7 @@ void main()
 {
 	vec4 warpedPosition = vec4(position, 1.0);
 
-	warpedPosition.x += 80.0 * sin(0.005 * warpedPosition.z + 10.0 * uTime);
+	warpedPosition.x += uAmplitude * sin(uWavelength * warpedPosition.z + uWaveSpeed * uTime);
 
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * warpedPosition;
 

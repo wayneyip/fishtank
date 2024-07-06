@@ -16,11 +16,7 @@ scene.add(dirLight)
 const ambLight = new THREE.AmbientLight()
 scene.add(ambLight)
 
-// Geometry
-// const geometry = new THREE.ConeGeometry(1, 2)
-// geometry.rotateX(0.5 * Math.PI)
-// const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
-
+// Boids
 var boidGroup = null
 
 const dracoLoader = new DRACOLoader()
@@ -50,13 +46,15 @@ gltfLoader.load(
 			transparent: true,
 			uniforms: 
 			{
-				uFrequency: { value: 100 },
+				uAmplitude: { value: 80.0 },
+				uWavelength: { value: 0.005 },
+				uWaveSpeed: { value: 10.0 },
 				uTime: { value: 0 },
 				uMap: { value: fishTexture },
 				uAlpha: { value: fishAlpha }
 			}
 		})
-		
+
 		// Boids 
 		const boidCount = 100
 		const boidScale = .001
@@ -106,7 +104,6 @@ const tick = () => {
 	if (material)
 	{
 		material.uniforms.uTime.value = elapsedTime
-		// console.log(material.uniforms.uTime.value)
 	}
 
 	if (boidGroup)
