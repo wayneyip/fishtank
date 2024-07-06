@@ -46,6 +46,8 @@ gltfLoader.load(
 		material = new THREE.RawShaderMaterial({
 			vertexShader: testVertexShader,
 			fragmentShader: testFragmentShader,
+			side: THREE.DoubleSide,
+			transparent: true,
 			uniforms: 
 			{
 				uFrequency: { value: 100 },

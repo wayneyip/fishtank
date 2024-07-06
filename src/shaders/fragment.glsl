@@ -8,7 +8,8 @@ varying vec2 vUv;
 void main()
 {
 	vec4 textureColor = texture2D(uMap, vUv);
-	vec4 alpha = texture2D(uAlpha, vUv);
-	
+	float alpha = texture2D(uAlpha, vUv).r;
+
 	gl_FragColor = textureColor;
+	gl_FragColor.a = alpha;
 }
