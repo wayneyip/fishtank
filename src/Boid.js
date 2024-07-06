@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-const initialMaxSpeed = 0.1
+const initialMaxSpeed = 0.01
 
 class Boid
 {

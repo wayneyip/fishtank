@@ -59,7 +59,7 @@ gltfLoader.load(
 		
 		// Boids 
 		const boidCount = 100
-		const boidScale = .001 //0.001
+		const boidScale = .001
 		const spawnRange = 2
 		boidGroup = new BoidGroup(
 			scene, geometry, material, 
