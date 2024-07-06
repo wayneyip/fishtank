@@ -50,7 +50,8 @@ gltfLoader.load(
 			{
 				uAmplitude: { value: 80.0 },
 				uWavelength: { value: 0.005 },
-				uWaveSpeed: { value: 10.0 },
+				uWaveSpeed: { value: 12.0 },
+				uOffset: { value: 0.0 },
 				uTime: { value: 0 },
 				uMap: { value: fishTexture },
 				uAlpha: { value: fishAlpha }
@@ -67,7 +68,6 @@ gltfLoader.load(
 		)
 	}
 )
-
 
 // Screen size
 const size = {
@@ -105,13 +105,12 @@ const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
 
-	if (material)
-	{
-		material.uniforms.uTime.value = elapsedTime
-	}
-
 	if (boidGroup)
 	{
+		for (let boid of boidGroup.boids)
+		{
+			boid.mesh.material.uniforms.uTime.value = elapsedTime
+		}
 		boidGroup.simulate()
 	}
 

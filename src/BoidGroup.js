@@ -9,6 +9,11 @@ const boundsAvoidanceFactor = 0.001
 const boundsRange 			= 3
 const maxSpeed 				= 0.05
 
+function randomNumber(min, max) 
+{
+	return Math.random() * (max - min) + min
+}
+
 class BoidGroup
 {
 	constructor(scene, boidGeo, boidMat, boidCount, boidScale, spawnRange)
@@ -17,7 +22,11 @@ class BoidGroup
 
 		for (let i=0; i < boidCount; i++)
 		{
-			const mesh = new THREE.Mesh(boidGeo, boidMat)	
+			// Give each fish's material a different offset for sine wave
+			var boidMatClone = boidMat.clone()
+			boidMatClone.uniforms.uOffset.value = randomNumber(0.0, 1000.0)
+
+			const mesh = new THREE.Mesh(boidGeo, boidMatClone)	
 			const boid = new Boid(mesh, boidScale, spawnRange)
 			scene.add(boid.mesh)
 			this.boids.push(boid)
