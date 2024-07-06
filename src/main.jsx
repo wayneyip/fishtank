@@ -5,6 +5,8 @@ import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
 import testVertexShader from './shaders/vertex.glsl'
 import testFragmentShader from './shaders/fragment.glsl'
 
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
@@ -93,6 +95,8 @@ const renderer = new THREE.WebGLRenderer({
 	canvas: canvas
 })
 renderer.setSize(size.width, size.height)
+
+const controls = new OrbitControls( camera, renderer.domElement );
 
 const clock = new THREE.Clock()
 
