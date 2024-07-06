@@ -22,7 +22,7 @@ scene.add(ambLight)
 var boidGroup = null
 
 const dracoLoader = new DRACOLoader()
-dracoLoader.setDecoderPath('static/draco/')
+dracoLoader.setDecoderPath('/draco/')
 
 const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
@@ -30,17 +30,16 @@ gltfLoader.setDRACOLoader(dracoLoader)
 const textureLoader = new THREE.TextureLoader()
 
 gltfLoader.load(
-	'static/fish.gltf',
+	'/fish.gltf',
 	(gltf) =>
 	{
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		geometry.rotateY(0.5 * Math.PI)
-		var material = mesh.material 
-		material.map = textureLoader.load('static/fish_c.png')
+		var material = new THREE.MeshPhongMaterial()
 		
 		// Boids 
-		const boidCount = 200
+		const boidCount = 100
 		const boidScale = 0.001
 		const spawnRange = 2
 		boidGroup = new BoidGroup(
