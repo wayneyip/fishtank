@@ -69,6 +69,25 @@ gltfLoader.load(
 	}
 )
 
+// Fog 
+scene.fog = new THREE.Fog( 0x166dce, 15, 30 )
+scene.background = new THREE.Color( 0x166dce )
+
+// Ground
+const groundGeo = new THREE.PlaneGeometry( 100, 100 )
+const groundDiffuse = textureLoader.load('ground/ground_Albedo.png')
+const groundNormal = textureLoader.load('ground/ground_Normal.png')
+const groundMat = new THREE.MeshStandardMaterial({ 
+	map: groundDiffuse,
+	normalMap: groundNormal 
+})
+const groundMesh = new THREE.Mesh(groundGeo, groundMat)
+groundMesh.rotateX(-0.5 * Math.PI)
+groundMesh.position.y -= 3.5
+groundMesh.position.z -= 13.5
+scene.add(groundMesh)
+dirLight.target = groundMesh
+
 // Screen size
 const size = {
 	width: window.innerWidth,
