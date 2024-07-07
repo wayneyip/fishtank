@@ -48,8 +48,8 @@ gltfLoader.load(
 			transparent: true,
 			uniforms: 
 			{
-				uAmplitude: { value: 80.0 },
-				uWavelength: { value: 0.005 },
+				uAmplitude: { value: 70.0 },
+				uWavelength: { value: 0.004 },
 				uWaveSpeed: { value: 12.0 },
 				uOffset: { value: 0.0 },
 				uTime: { value: 0 },
@@ -60,7 +60,7 @@ gltfLoader.load(
 
 		// Boids 
 		const boidCount = 100
-		const boidScale = .001
+		const boidScale = 0.001
 		const spawnRange = 2
 		boidGroup = new BoidGroup(
 			scene, geometry, material, 
