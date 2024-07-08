@@ -68,11 +68,11 @@ gltfLoader.load(
 )
 
 // Fog 
-scene.fog = new THREE.Fog( 0x166dce, 33, 66 )
-scene.background = new THREE.Color( 0x166dce )
+scene.fog = new THREE.Fog( 0x02649a, 50, 150 )
+scene.background = new THREE.Color( 0x02649a )
 
 // Ground
-const groundGeo = new THREE.PlaneGeometry( 120, 120, 50, 50 )
+const groundGeo = new THREE.PlaneGeometry( 300, 300 )
 const groundDiffuse = textureLoader.load('ground/ground_c.png')
 var groundNormal = textureLoader.load('ground/ground_n.png')
 groundNormal.wrapS = THREE.RepeatWrapping
@@ -83,7 +83,7 @@ groundCaustics.wrapS = THREE.RepeatWrapping
 groundCaustics.wrapT = THREE.RepeatWrapping
 const groundMat = new THREE.MeshStandardMaterial({
 	map: groundDiffuse,
-	// normalMap: groundNormal
+	normalMap: groundNormal
 })
 const groundUniforms = {
 	uCausticsMap: { value: groundCaustics },
@@ -106,7 +106,7 @@ groundMat.onBeforeCompile = (shader) =>
 		'#include <map_fragment>',
 		`
 		#include <map_fragment>
-		diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.02);
+		diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.01);
 		`
 	)
 	groundMat.userData.shader = shader
