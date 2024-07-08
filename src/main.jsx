@@ -2,8 +2,8 @@ import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
-import testVertexShader from './shaders/vertex.glsl'
-import testFragmentShader from './shaders/fragment.glsl'
+import fishVertexShader from './shaders/fishVertex.glsl'
+import fishFragmentShader from './shaders/fishFragment.glsl'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -39,9 +39,9 @@ gltfLoader.load(
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		geometry.rotateY(0.5 * Math.PI)
-		material = new THREE.RawShaderMaterial({
-			vertexShader: testVertexShader,
-			fragmentShader: testFragmentShader,
+		material = new THREE.ShaderMaterial({
+			vertexShader: fishVertexShader,
+			fragmentShader: fishFragmentShader,
 			side: THREE.DoubleSide,
 			transparent: true,
 			uniforms: 
@@ -68,20 +68,49 @@ gltfLoader.load(
 )
 
 // Fog 
-scene.fog = new THREE.Fog( 0x166dce, 33, 66 )
-scene.background = new THREE.Color( 0x166dce )
+scene.fog = new THREE.Fog( 0x02649a, 50, 150 )
+scene.background = new THREE.Color( 0x02649a )
 
 // Ground
-const groundGeo = new THREE.PlaneGeometry( 120, 120, 50, 50 )
+const groundGeo = new THREE.PlaneGeometry( 300, 300 )
 const groundDiffuse = textureLoader.load('ground/ground_c.png')
 var groundNormal = textureLoader.load('ground/ground_n.png')
 groundNormal.wrapS = THREE.RepeatWrapping
 groundNormal.wrapT = THREE.RepeatWrapping
 groundNormal.repeat.set( 4, 4 )
-const groundMat = new THREE.MeshStandardMaterial({ 
+var groundCaustics = textureLoader.load('ground/ground_caustics.png')
+groundCaustics.wrapS = THREE.RepeatWrapping
+groundCaustics.wrapT = THREE.RepeatWrapping
+const groundMat = new THREE.MeshStandardMaterial({
 	map: groundDiffuse,
 	normalMap: groundNormal
 })
+const groundUniforms = {
+	uCausticsMap: { value: groundCaustics },
+	uTime: { value: 0 }
+} 
+groundMat.onBeforeCompile = (shader) =>
+{
+	shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
+	shader.uniforms.uTime = groundUniforms.uTime
+
+	shader.fragmentShader = shader.fragmentShader.replace(
+		'uniform vec3 diffuse;',
+		`
+		uniform vec3 diffuse;
+		uniform sampler2D uCausticsMap;
+		uniform float uTime;
+		`
+	)
+	shader.fragmentShader = shader.fragmentShader.replace(
+		'#include <map_fragment>',
+		`
+		#include <map_fragment>
+		diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.01);
+		`
+	)
+	groundMat.userData.shader = shader
+}
 const groundMesh = new THREE.Mesh(groundGeo, groundMat)
 groundMesh.rotateX(-0.5 * Math.PI)
 groundMesh.position.y -= 15
@@ -133,6 +162,10 @@ const tick = () => {
 			boid.mesh.material.uniforms.uTime.value = elapsedTime
 		}
 		boidGroup.simulate()
+	}
+	if (groundMat.userData.shader)
+	{
+		groundMat.userData.shader.uniforms.uTime.value = elapsedTime
 	}
 
 	// Render
