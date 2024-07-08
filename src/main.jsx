@@ -15,8 +15,6 @@ const scene = new THREE.Scene()
 // Lighting
 const dirLight = new THREE.DirectionalLight()
 scene.add(dirLight)
-const ambLight = new THREE.AmbientLight()
-scene.add(ambLight)
 
 // Boids
 var boidGroup = null
@@ -70,22 +68,28 @@ gltfLoader.load(
 )
 
 // Fog 
-scene.fog = new THREE.Fog( 0x166dce, 15, 30 )
+scene.fog = new THREE.Fog( 0x166dce, 33, 66 )
 scene.background = new THREE.Color( 0x166dce )
 
 // Ground
-const groundGeo = new THREE.PlaneGeometry( 100, 100 )
-const groundDiffuse = textureLoader.load('ground/ground_Albedo.png')
-const groundNormal = textureLoader.load('ground/ground_Normal.png')
+const groundGeo = new THREE.PlaneGeometry( 120, 120, 50, 50 )
+const groundDiffuse = textureLoader.load('ground/ground_c.png')
+var groundNormal = textureLoader.load('ground/ground_n.png')
+groundNormal.wrapS = THREE.RepeatWrapping
+groundNormal.wrapT = THREE.RepeatWrapping
+groundNormal.repeat.set( 4, 4 )
 const groundMat = new THREE.MeshStandardMaterial({ 
 	map: groundDiffuse,
-	normalMap: groundNormal 
+	normalMap: groundNormal,
+	roughness: 0.8,
+	metalness: 0.5  
 })
 const groundMesh = new THREE.Mesh(groundGeo, groundMat)
 groundMesh.rotateX(-0.5 * Math.PI)
-groundMesh.position.y -= 3.5
-groundMesh.position.z -= 13.5
+groundMesh.position.y -= 15
 scene.add(groundMesh)
+dirLight.position.y = 3
+dirLight.position.z = 10
 dirLight.target = groundMesh
 
 // Screen size
