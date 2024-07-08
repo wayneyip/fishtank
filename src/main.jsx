@@ -2,8 +2,8 @@ import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
-import testVertexShader from './shaders/vertex.glsl'
-import testFragmentShader from './shaders/fragment.glsl'
+import fishVertexShader from './shaders/fishVertex.glsl'
+import fishFragmentShader from './shaders/fishFragment.glsl'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -39,9 +39,9 @@ gltfLoader.load(
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		geometry.rotateY(0.5 * Math.PI)
-		material = new THREE.RawShaderMaterial({
-			vertexShader: testVertexShader,
-			fragmentShader: testFragmentShader,
+		material = new THREE.ShaderMaterial({
+			vertexShader: fishVertexShader,
+			fragmentShader: fishFragmentShader,
 			side: THREE.DoubleSide,
 			transparent: true,
 			uniforms: 
