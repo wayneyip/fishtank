@@ -78,10 +78,39 @@ var groundNormal = textureLoader.load('ground/ground_n.png')
 groundNormal.wrapS = THREE.RepeatWrapping
 groundNormal.wrapT = THREE.RepeatWrapping
 groundNormal.repeat.set( 4, 4 )
-const groundMat = new THREE.MeshStandardMaterial({ 
+var groundCaustics = textureLoader.load('ground/ground_caustics.png')
+groundCaustics.wrapS = THREE.RepeatWrapping
+groundCaustics.wrapT = THREE.RepeatWrapping
+const groundMat = new THREE.MeshStandardMaterial({
 	map: groundDiffuse,
-	normalMap: groundNormal
+	// normalMap: groundNormal
 })
+const groundUniforms = {
+	uCausticsMap: { value: groundCaustics },
+	uTime: { value: 0 }
+} 
+groundMat.onBeforeCompile = (shader) =>
+{
+	shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
+	shader.uniforms.uTime = groundUniforms.uTime
+
+	shader.fragmentShader = shader.fragmentShader.replace(
+		'uniform vec3 diffuse;',
+		`
+		uniform vec3 diffuse;
+		uniform sampler2D uCausticsMap;
+		uniform float uTime;
+		`
+	)
+	shader.fragmentShader = shader.fragmentShader.replace(
+		'#include <map_fragment>',
+		`
+		#include <map_fragment>
+		diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.02);
+		`
+	)
+	groundMat.userData.shader = shader
+}
 const groundMesh = new THREE.Mesh(groundGeo, groundMat)
 groundMesh.rotateX(-0.5 * Math.PI)
 groundMesh.position.y -= 15
@@ -133,6 +162,10 @@ const tick = () => {
 			boid.mesh.material.uniforms.uTime.value = elapsedTime
 		}
 		boidGroup.simulate()
+	}
+	if (groundMat.userData.shader)
+	{
+		groundMat.userData.shader.uniforms.uTime.value = elapsedTime
 	}
 
 	// Render
