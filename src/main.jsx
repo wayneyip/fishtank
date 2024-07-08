@@ -80,9 +80,7 @@ groundNormal.wrapT = THREE.RepeatWrapping
 groundNormal.repeat.set( 4, 4 )
 const groundMat = new THREE.MeshStandardMaterial({ 
 	map: groundDiffuse,
-	normalMap: groundNormal,
-	roughness: 0.8,
-	metalness: 0.5  
+	normalMap: groundNormal
 })
 const groundMesh = new THREE.Mesh(groundGeo, groundMat)
 groundMesh.rotateX(-0.5 * Math.PI)
