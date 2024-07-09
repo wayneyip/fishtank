@@ -26,12 +26,12 @@ const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
 const textureLoader = new THREE.TextureLoader()
-const fishTexture = textureLoader.load('fish_c.png')
+const fishTexture = textureLoader.load('fish/fish_c.png')
 fishTexture.flipY = false
 var material = null
 
 gltfLoader.load(
-	'/fish.gltf',
+	'fish/fish.gltf',
 	(gltf) =>
 	{
 		const mesh = gltf.scene.children[0]
