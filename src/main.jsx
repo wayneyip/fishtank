@@ -114,6 +114,28 @@ dirLight.position.y = 3
 dirLight.position.z = 10
 dirLight.target = groundMesh
 
+// Particles
+const particlesGeometry = new THREE.BufferGeometry()
+const particlesCount = 500
+const particlesBounds = 20
+const particlesPosArray = new Float32Array(particlesCount * 3)
+for (let i=0; i < particlesCount * 3; i++)
+{
+	particlesPosArray[i] = (Math.random() - 0.5) * particlesBounds
+}
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlesPosArray, 3))
+
+
+const particlesDiffuse = textureLoader.load('particles/particles_a.png')
+
+const particlesMaterial = new THREE.PointsMaterial({
+	size: 0.1,
+	map: particlesDiffuse,
+	transparent: true
+})
+const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial)
+scene.add(particlesMesh)
+
 // Screen size
 const size = {
 	width: window.innerWidth,
@@ -162,6 +184,7 @@ const tick = () => {
 	{
 		groundMat.userData.shader.uniforms.uTime.value = elapsedTime
 	}
+	particlesMesh.rotation.x -= 0.002
 
 	// Render
 	renderer.render(scene, camera)
