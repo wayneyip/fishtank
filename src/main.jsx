@@ -27,9 +27,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 
 const textureLoader = new THREE.TextureLoader()
 const fishTexture = textureLoader.load('fish_c.png')
-const fishAlpha = textureLoader.load('fish_a.png')
 fishTexture.flipY = false
-fishAlpha.flipY = false
 var material = null
 
 gltfLoader.load(
@@ -37,14 +35,11 @@ gltfLoader.load(
 	(gltf) =>
 	{
 		const mesh = gltf.scene.children[0]
-		console.log(mesh)
 		const geometry = mesh.geometry 
 		geometry.rotateX(0.5 * Math.PI)
 		material = new THREE.ShaderMaterial({
 			vertexShader: fishVertexShader,
 			fragmentShader: fishFragmentShader,
-			side: THREE.DoubleSide,
-			transparent: true,
 			uniforms: 
 			{
 				uAmplitude: { value: 5.0 },
@@ -53,7 +48,6 @@ gltfLoader.load(
 				uOffset: { value: 0.0 },
 				uTime: { value: 0 },
 				uMap: { value: fishTexture },
-				uAlpha: { value: fishAlpha }
 			}
 		})
 
