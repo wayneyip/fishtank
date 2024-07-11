@@ -2,14 +2,25 @@ import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import GUI from 'lil-gui'
+
 import fishVertexShader from './shaders/fishVertex.glsl'
 import fishFragmentShader from './shaders/fishFragment.glsl'
 import waterVertexShader from './shaders/waterVertex.glsl'
 import waterFragmentShader from './shaders/waterFragment.glsl'
 
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
 const canvas = document.querySelector('canvas.webgl')
+
+// GUI
+const gui = new GUI()
+window.addEventListener('keydown', (event) =>
+{
+	if (event.key == 'd')
+	{
+		gui.show(gui._hidden)
+	}
+})
 
 // Scene
 const scene = new THREE.Scene()
