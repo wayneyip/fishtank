@@ -1,9 +1,10 @@
 import * as THREE from 'three'
 import {BoidGroup} from './BoidGroup'
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
-import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
+import Resources from './Resources'
+import Ground from './Ground'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui'
+
 
 import fishVertexShader from './shaders/fishVertex.glsl'
 import fishFragmentShader from './shaders/fishFragment.glsl'
@@ -48,22 +49,15 @@ const skyMesh = new THREE.Mesh(skyGeo, skyMat)
 scene.add(skyMesh)
 
 // Loaders
-var boidGroup = null
-
-const dracoLoader = new DRACOLoader()
-dracoLoader.setDecoderPath('/draco/')
-
-const gltfLoader = new GLTFLoader()
-gltfLoader.setDRACOLoader(dracoLoader)
-
-const textureLoader = new THREE.TextureLoader()
+var resources = new Resources()
 
 // Boids
-const fishTexture = textureLoader.load('fish/fish_c.png')
+var boidGroup = null
+const fishTexture = resources.loaders.textureLoader.load('fish/fish_c.png')
 fishTexture.flipY = false
 var material = null
 
-gltfLoader.load(
+resources.loaders.gltfLoader.load(
 	'fish/fish.gltf',
 	(gltf) =>
 	{
@@ -97,53 +91,56 @@ gltfLoader.load(
 )
 
 // Ground
-const groundGeo = new THREE.PlaneGeometry( 300, 300 )
-const groundDiffuse = textureLoader.load('ground/ground_c.png')
-var groundNormal = textureLoader.load('ground/ground_n.png')
-groundNormal.wrapS = THREE.RepeatWrapping
-groundNormal.wrapT = THREE.RepeatWrapping
-groundNormal.repeat.set( 4, 4 )
-var groundCaustics = textureLoader.load('ground/ground_caustics.png')
-groundCaustics.wrapS = THREE.RepeatWrapping
-groundCaustics.wrapT = THREE.RepeatWrapping
-const groundMat = new THREE.MeshStandardMaterial({
-	color: 0xbbbbee,
-	map: groundDiffuse,
-	normalMap: groundNormal
-})
-const groundUniforms = {
-	uCausticsMap: { value: groundCaustics },
-	uTime: { value: 0 }
-} 
-groundMat.onBeforeCompile = (shader) =>
-{
-	shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
-	shader.uniforms.uTime = groundUniforms.uTime
+var ground = new Ground(resources)
+scene.add(ground.mesh)
 
-	shader.fragmentShader = shader.fragmentShader.replace(
-		'uniform vec3 diffuse;',
-		`
-		uniform vec3 diffuse;
-		uniform sampler2D uCausticsMap;
-		uniform float uTime;
-		`
-	)
-	shader.fragmentShader = shader.fragmentShader.replace(
-		'#include <map_fragment>',
-		`
-		#include <map_fragment>
-		diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.01);
-		`
-	)
-	groundMat.userData.shader = shader
-}
-const groundMesh = new THREE.Mesh(groundGeo, groundMat)
-groundMesh.rotateX(-0.5 * Math.PI)
-groundMesh.position.y -= 15
-scene.add(groundMesh)
-dirLight.position.y = 3
-dirLight.position.z = 10
-dirLight.target = groundMesh
+// const groundGeo = new THREE.PlaneGeometry( 300, 300 )
+// const groundDiffuse = textureLoader.load('ground/ground_c.png')
+// var groundNormal = textureLoader.load('ground/ground_n.png')
+// groundNormal.wrapS = THREE.RepeatWrapping
+// groundNormal.wrapT = THREE.RepeatWrapping
+// groundNormal.repeat.set( 4, 4 )
+// var groundCaustics = textureLoader.load('ground/ground_caustics.png')
+// groundCaustics.wrapS = THREE.RepeatWrapping
+// groundCaustics.wrapT = THREE.RepeatWrapping
+// const groundMat = new THREE.MeshStandardMaterial({
+// 	color: 0xbbbbee,
+// 	map: groundDiffuse,
+// 	normalMap: groundNormal
+// })
+// const groundUniforms = {
+// 	uCausticsMap: { value: groundCaustics },
+// 	uTime: { value: 0 }
+// } 
+// groundMat.onBeforeCompile = (shader) =>
+// {
+// 	shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
+// 	shader.uniforms.uTime = groundUniforms.uTime
+
+// 	shader.fragmentShader = shader.fragmentShader.replace(
+// 		'uniform vec3 diffuse;',
+// 		`
+// 		uniform vec3 diffuse;
+// 		uniform sampler2D uCausticsMap;
+// 		uniform float uTime;
+// 		`
+// 	)
+// 	shader.fragmentShader = shader.fragmentShader.replace(
+// 		'#include <map_fragment>',
+// 		`
+// 		#include <map_fragment>
+// 		diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.01);
+// 		`
+// 	)
+// 	groundMat.userData.shader = shader
+// }
+// const groundMesh = new THREE.Mesh(groundGeo, groundMat)
+// groundMesh.rotateX(-0.5 * Math.PI)
+// groundMesh.position.y -= 15
+// scene.add(groundMesh)
+// dirLight.position.y = 3
+// dirLight.position.z = 10
+// dirLight.target = groundMesh
 
 // Particles
 const particlesGeometry = new THREE.BufferGeometry()
@@ -157,7 +154,7 @@ for (let i=0; i < particlesCount * 3; i++)
 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlesPosArray, 3))
 
 
-const particlesDiffuse = textureLoader.load('particles/particles_a.png')
+const particlesDiffuse = resources.loaders.textureLoader.load('particles/particles_a.png')
 
 const particlesMaterial = new THREE.PointsMaterial({
 	size: 0.1,
@@ -213,10 +210,7 @@ const tick = () => {
 		}
 		boidGroup.simulate()
 	}
-	if (groundMat.userData.shader)
-	{
-		groundMat.userData.shader.uniforms.uTime.value = elapsedTime
-	}
+	ground.update(elapsedTime)
 	particlesMesh.rotation.x -= 0.002
 
 	// Render
