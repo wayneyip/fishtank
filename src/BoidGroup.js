@@ -16,7 +16,7 @@ function randomNumber(min, max)
 
 class BoidGroup
 {
-	constructor(scene, boidGeo, boidMat, boidCount, boidScale, spawnRange)
+	constructor(boidGeo, boidMat, boidCount, boidScale, spawnRange)
 	{
 		this.boids = []
 
@@ -28,7 +28,6 @@ class BoidGroup
 
 			const mesh = new THREE.Mesh(boidGeo, boidMatClone)	
 			const boid = new Boid(mesh, boidScale, spawnRange)
-			scene.add(boid.mesh)
 			this.boids.push(boid)
 		}
 		
