@@ -22,14 +22,14 @@ scene.add(dirLight)
 
 // Skybox
 const skySize = 1000
-const skyGeo = new THREE.BoxGeometry(skySize,skySize,skySize)
+const skyGeo = new THREE.SphereGeometry(skySize)
 const skyMat = new THREE.ShaderMaterial({
 	vertexShader: waterVertexShader,
 	fragmentShader: waterFragmentShader,
 	side: THREE.BackSide,
 	uniforms:
 	{
-		uTopColor: { value: new THREE.Vector4(1,1,0.5,1) },
+		uTopColor: { value: new THREE.Vector4(1,1,1,1) },
 		uBottomColor: { value: new THREE.Vector4(0.007,0.392,0.604,1) }
 	}
 })
