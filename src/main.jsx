@@ -14,6 +14,13 @@ const canvas = document.querySelector('canvas.webgl')
 
 // GUI
 const gui = new GUI()
+window.addEventListener('keydown', (event) =>
+{
+	if (event.key == 'd')
+	{
+		gui.show(gui._hidden)
+	}
+})
 
 // Scene
 const scene = new THREE.Scene()
