@@ -20,7 +20,23 @@ scene.background = new THREE.Color( 0x02649a )
 const dirLight = new THREE.DirectionalLight()
 scene.add(dirLight)
 
-// Boids
+// Skybox
+const skySize = 1000
+const skyGeo = new THREE.BoxGeometry(skySize,skySize,skySize)
+const skyMat = new THREE.ShaderMaterial({
+	vertexShader: waterVertexShader,
+	fragmentShader: waterFragmentShader,
+	side: THREE.BackSide,
+	uniforms:
+	{
+		uTopColor: { value: new THREE.Vector4(1,1,0.5,1) },
+		uBottomColor: { value: new THREE.Vector4(0.007,0.392,0.604,1) }
+	}
+})
+const skyMesh = new THREE.Mesh(skyGeo, skyMat)
+scene.add(skyMesh)
+
+// Loaders
 var boidGroup = null
 
 const dracoLoader = new DRACOLoader()
@@ -30,6 +46,8 @@ const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
 const textureLoader = new THREE.TextureLoader()
+
+// Boids
 const fishTexture = textureLoader.load('fish/fish_c.png')
 fishTexture.flipY = false
 var material = null
@@ -162,7 +180,8 @@ scene.add(camera)
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
-	canvas: canvas
+	canvas: canvas,
+	antialias: true
 })
 renderer.setSize(size.width, size.height)
 
