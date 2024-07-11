@@ -4,6 +4,8 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
 import fishVertexShader from './shaders/fishVertex.glsl'
 import fishFragmentShader from './shaders/fishFragment.glsl'
+import waterVertexShader from './shaders/waterVertex.glsl'
+import waterFragmentShader from './shaders/waterFragment.glsl'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -11,12 +13,30 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+scene.fog = new THREE.Fog( 0x02649a, 50, 150 )
+scene.background = new THREE.Color( 0x02649a )
 
 // Lighting
 const dirLight = new THREE.DirectionalLight()
 scene.add(dirLight)
 
-// Boids
+// Skybox
+const skySize = 1000
+const skyGeo = new THREE.SphereGeometry(skySize)
+const skyMat = new THREE.ShaderMaterial({
+	vertexShader: waterVertexShader,
+	fragmentShader: waterFragmentShader,
+	side: THREE.BackSide,
+	uniforms:
+	{
+		uTopColor: { value: new THREE.Vector4(1,1,1,1) },
+		uBottomColor: { value: new THREE.Vector4(0.007,0.392,0.604,1) }
+	}
+})
+const skyMesh = new THREE.Mesh(skyGeo, skyMat)
+scene.add(skyMesh)
+
+// Loaders
 var boidGroup = null
 
 const dracoLoader = new DRACOLoader()
@@ -26,6 +46,8 @@ const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
 const textureLoader = new THREE.TextureLoader()
+
+// Boids
 const fishTexture = textureLoader.load('fish/fish_c.png')
 fishTexture.flipY = false
 var material = null
@@ -48,6 +70,7 @@ gltfLoader.load(
 				uOffset: { value: 0.0 },
 				uTime: { value: 0 },
 				uMap: { value: fishTexture },
+				uTint: { value: new THREE.Vector4(0.7, 0.7, 1.0, 1.0) },
 			}
 		})
 
@@ -62,10 +85,6 @@ gltfLoader.load(
 	}
 )
 
-// Fog 
-scene.fog = new THREE.Fog( 0x02649a, 50, 150 )
-scene.background = new THREE.Color( 0x02649a )
-
 // Ground
 const groundGeo = new THREE.PlaneGeometry( 300, 300 )
 const groundDiffuse = textureLoader.load('ground/ground_c.png')
@@ -77,6 +96,7 @@ var groundCaustics = textureLoader.load('ground/ground_caustics.png')
 groundCaustics.wrapS = THREE.RepeatWrapping
 groundCaustics.wrapT = THREE.RepeatWrapping
 const groundMat = new THREE.MeshStandardMaterial({
+	color: 0xbbbbee,
 	map: groundDiffuse,
 	normalMap: groundNormal
 })
@@ -114,6 +134,29 @@ dirLight.position.y = 3
 dirLight.position.z = 10
 dirLight.target = groundMesh
 
+// Particles
+const particlesGeometry = new THREE.BufferGeometry()
+const particlesCount = 500
+const particlesBounds = 20
+const particlesPosArray = new Float32Array(particlesCount * 3)
+for (let i=0; i < particlesCount * 3; i++)
+{
+	particlesPosArray[i] = (Math.random() - 0.5) * particlesBounds
+}
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlesPosArray, 3))
+
+
+const particlesDiffuse = textureLoader.load('particles/particles_a.png')
+
+const particlesMaterial = new THREE.PointsMaterial({
+	size: 0.1,
+	map: particlesDiffuse,
+	transparent: true,
+	opacity: 0.4
+})
+const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial)
+scene.add(particlesMesh)
+
 // Screen size
 const size = {
 	width: window.innerWidth,
@@ -137,7 +180,8 @@ scene.add(camera)
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
-	canvas: canvas
+	canvas: canvas,
+	antialias: true
 })
 renderer.setSize(size.width, size.height)
 
@@ -162,6 +206,7 @@ const tick = () => {
 	{
 		groundMat.userData.shader.uniforms.uTime.value = elapsedTime
 	}
+	particlesMesh.rotation.x -= 0.002
 
 	// Render
 	renderer.render(scene, camera)
