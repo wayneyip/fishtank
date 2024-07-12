@@ -1,8 +1,9 @@
 import * as THREE from 'three'
+import {randomNumber} from './Utils'
 
 const initialMaxSpeed = 0.01
 
-class Boid
+export default class Boid
 {
 	constructor(mesh, scale, spawnRange)
 	{
@@ -36,9 +37,3 @@ class Boid
 	}
 } 
 
-function randomNumber(min, max) 
-{
-	return Math.random() * (max - min) + min
-}
-
-export { Boid }

@@ -1,5 +1,6 @@
 import * as THREE from 'three'
-import {Boid} from './Boid'
+import Boid from './Boid'
+import {randomNumber} from './Utils'
 
 const cohesionFactor 		= 0.00005
 const alignmentFactor 		= 0.01
@@ -9,26 +10,20 @@ const boundsAvoidanceFactor = 0.001
 const boundsRange 			= 3
 const maxSpeed 				= 0.05
 
-function randomNumber(min, max) 
+export default class BoidGroup
 {
-	return Math.random() * (max - min) + min
-}
-
-class BoidGroup
-{
-	constructor(scene, boidGeo, boidMat, boidCount, boidScale, spawnRange)
+	constructor(boidGeo, boidMat, boidCount, boidScale, spawnRange)
 	{
 		this.boids = []
 
 		for (let i=0; i < boidCount; i++)
 		{
 			// Give each fish's material a different offset for sine wave
-			var boidMatClone = boidMat.clone()
+			const boidMatClone = boidMat.clone()
 			boidMatClone.uniforms.uOffset.value = randomNumber(0.0, 1000.0)
 
 			const mesh = new THREE.Mesh(boidGeo, boidMatClone)	
 			const boid = new Boid(mesh, boidScale, spawnRange)
-			scene.add(boid.mesh)
 			this.boids.push(boid)
 		}
 		
@@ -120,5 +115,3 @@ class BoidGroup
 		}
 	}
 }
-
-export { BoidGroup }
