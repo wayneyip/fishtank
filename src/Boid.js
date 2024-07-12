@@ -3,7 +3,7 @@ import {randomNumber} from './Utils'
 
 const initialMaxSpeed = 0.01
 
-class Boid
+export default class Boid
 {
 	constructor(mesh, scale, spawnRange)
 	{
@@ -37,4 +37,3 @@ class Boid
 	}
 } 
 
-export { Boid }

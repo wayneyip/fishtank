@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import {Boid} from './Boid'
+import Boid from './Boid'
 import {randomNumber} from './Utils'
 
 const cohesionFactor 		= 0.00005
@@ -115,5 +115,3 @@ export default class BoidGroup
 		}
 	}
 }
-
-export { BoidGroup }
