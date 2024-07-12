@@ -48,24 +48,26 @@ const skyMesh = new THREE.Mesh(skyGeo, skyMat)
 scene.add(skyMesh)
 
 // Loaders
-var resources = new Resources(sources)
+let resources = new Resources(sources)
+let fish, ground, particles
+
 resources.on('ready', () => {
+	
 	// Fish 
-	var fish = new Fish(resources)
+	fish = new Fish(resources)
 	for (let f of fish.boidGroup.boids)
 	{
 		scene.add(f.mesh)
 	}
 
 	// Ground
-	var ground = new Ground(resources)
+	ground = new Ground(resources)
 	scene.add(ground.mesh)
 
 	// Particles
-	var particles = new Particles(resources)
+	particles = new Particles(resources)
 	scene.add(particles.mesh)
 })
-
 
 // Screen size
 const size = {
@@ -104,9 +106,12 @@ const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
 
-	// fish.update(elapsedTime)
-	// ground.update(elapsedTime)
-	// particles.update(elapsedTime)
+	if (fish)
+		fish.update(elapsedTime)
+	if (ground)
+		ground.update(elapsedTime)
+	if (particles)
+		particles.update(elapsedTime)
 
 	// Render
 	renderer.render(scene, camera)

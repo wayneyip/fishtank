@@ -74,6 +74,9 @@ export default class Ground extends WorldObject
 
 	update(elapsedTime)
 	{
-		this.material.userData.shader.uniforms.uTime.value = elapsedTime
+		if (this.material.userData.shader)
+		{
+			this.material.userData.shader.uniforms.uTime.value = elapsedTime
+		}
 	}
 }

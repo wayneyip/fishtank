@@ -63,6 +63,6 @@ export default class Fish extends WorldObject
 		{
 			boid.mesh.material.uniforms.uTime.value = elapsedTime
 		}
-		boidGroup.simulate()
+		this.boidGroup.simulate()
 	}
 }
