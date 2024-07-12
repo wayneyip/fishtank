@@ -3,44 +3,13 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
 import EventEmitter from './EventEmitter'
 
-const sources = [
-	{
-		name: 'fish_model',
-		type: 'gltfModel',
-		path: 'fish/fish.gltf'
-	},
-	{
-		name: 'fish_c',
-		type: 'texture',
-		path: 'fish/fish_c.png'
-	},
-	{
-		name: 'ground_c',
-		type: 'texture',
-		path: 'ground/ground_c.png'
-	},
-	{
-		name: 'ground_n',
-		type: 'texture',
-		path: 'ground/ground_n.png'
-	},
-	{
-		name: 'ground_caustics',
-		type: 'texture',
-		path: 'ground/ground_caustics.png'
-	},
-	{
-		name: 'particles_a',
-		type: 'texture',
-		path: 'particles/particles_a.png'
-	},
-]
-
 export default class Resources extends EventEmitter
 {
-	constructor()
+	constructor(sources)
 	{
 		super()
+
+		this.sources = sources
 
 		this.items = {}
 		this.toLoad = sources.length
@@ -68,7 +37,7 @@ export default class Resources extends EventEmitter
 
 	startLoading()
 	{
-		for (let source of sources)
+		for (let source of this.sources)
 		{
 			if (source.type == 'gltfModel')
 			{
@@ -104,6 +73,7 @@ export default class Resources extends EventEmitter
 
 		if (this.isFinishedLoading())
 		{
+			console.log("Ready: all resources loaded!")
 			this.trigger('ready')
 		}
 	}

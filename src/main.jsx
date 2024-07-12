@@ -3,6 +3,7 @@ import Resources from './Resources'
 import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
+import sources from './Sources'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui'
 
@@ -47,10 +48,9 @@ const skyMesh = new THREE.Mesh(skyGeo, skyMat)
 scene.add(skyMesh)
 
 // Loaders
-var resources = new Resources()
+var resources = new Resources(sources)
 resources.on('ready', () => {
 	// Fish 
-	console.log("Ready: all resources loaded!")
 	var fish = new Fish(resources)
 	for (let f of fish.boidGroup.boids)
 	{
