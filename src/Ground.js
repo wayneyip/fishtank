@@ -18,17 +18,17 @@ export default class Ground extends WorldObject
 		// Textures
 		const groundDiffuse = this.resources.items['ground_c']
 
-		let groundNormal = this.resources.items['ground_n']
+		const groundNormal = this.resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
 		groundNormal.repeat.set( 4, 4 )
 
-		let groundCaustics = this.resources.items['ground_caustics']
+		const groundCaustics = this.resources.items['ground_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
 		groundCaustics.wrapT = THREE.RepeatWrapping
 
 		// Material
-		let material = new THREE.MeshStandardMaterial({
+		const material = new THREE.MeshStandardMaterial({
 			color: 0xbbbbee,
 			map: groundDiffuse,
 			normalMap: groundNormal
@@ -65,7 +65,7 @@ export default class Ground extends WorldObject
 
 	initMesh()
 	{
-		let mesh = new THREE.Mesh(this.geometry, this.material)
+		const mesh = new THREE.Mesh(this.geometry, this.material)
 		mesh.rotateX(-0.5 * Math.PI)
 		mesh.position.y -= 15
 

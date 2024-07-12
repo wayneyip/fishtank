@@ -10,7 +10,7 @@ export default class Particles extends WorldObject
 
 	initGeometry()
 	{
-		let geometry = new THREE.BufferGeometry()
+		const geometry = new THREE.BufferGeometry()
 
 		const particlesCount = 500
 		const particlesBounds = 20
@@ -40,7 +40,9 @@ export default class Particles extends WorldObject
 
 	initMesh()
 	{
-		return new THREE.Points(this.geometry, this.material)
+		const mesh = new THREE.Points(this.geometry, this.material)
+
+		return mesh
 	}
 
 	update(elapsedTime)

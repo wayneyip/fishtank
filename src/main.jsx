@@ -8,9 +8,7 @@ import Particles from './Particles'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui'
 
-import waterVertexShader from './shaders/waterVertex.glsl'
-import waterFragmentShader from './shaders/waterFragment.glsl'
-
+// Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // GUI
@@ -33,18 +31,18 @@ const dirLight = new THREE.DirectionalLight()
 scene.add(dirLight)
 
 // Loaders
-let resources = new Resources(sources)
+const resources = new Resources(sources)
 let skybox, fish, ground, particles
 
 resources.on('ready', () => {
 
 	// Skybox
-	let skybox = new Skybox(resources)
+	const skybox = new Skybox(resources)
 	scene.add(skybox.mesh)
 
 	// Fish 
 	fish = new Fish(resources)
-	for (let f of fish.boidGroup.boids)
+	for (const f of fish.boidGroup.boids)
 	{
 		scene.add(f.mesh)
 	}

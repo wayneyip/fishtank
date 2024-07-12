@@ -19,7 +19,7 @@ export default class BoidGroup
 		for (let i=0; i < boidCount; i++)
 		{
 			// Give each fish's material a different offset for sine wave
-			var boidMatClone = boidMat.clone()
+			const boidMatClone = boidMat.clone()
 			boidMatClone.uniforms.uOffset.value = randomNumber(0.0, 1000.0)
 
 			const mesh = new THREE.Mesh(boidGeo, boidMatClone)	

@@ -15,7 +15,7 @@ export default class Fish extends WorldObject
 	{
 		const gltf = this.resources.items['fish_model']
 		const mesh = gltf.scene.children[0]
-		let geometry = mesh.geometry 
+		const geometry = mesh.geometry 
 		
 		geometry.rotateX(0.5 * Math.PI)
 
@@ -28,7 +28,7 @@ export default class Fish extends WorldObject
 		const fishTexture = this.resources.items['fish_c']
 
 		// Material
-		let material = new THREE.ShaderMaterial({
+		const material = new THREE.ShaderMaterial({
 			vertexShader: fishVertexShader,
 			fragmentShader: fishFragmentShader,
 			uniforms: 
