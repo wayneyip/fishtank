@@ -1,33 +1,46 @@
 import * as THREE from 'three'
+import WorldObject from './WorldObject'
 
-export default class Particles
+export default class Particles extends WorldObject
 {
 	constructor(resources)
 	{
-		// Geometry
-		this.geometry = new THREE.BufferGeometry()
+		super(resources)
+	}
+
+	initGeometry()
+	{
+		let geometry = new THREE.BufferGeometry()
+
 		const particlesCount = 500
 		const particlesBounds = 20
 		const particlesPosArray = new Float32Array(particlesCount * 3)
+		
 		for (let i=0; i < particlesCount * 3; i++)
 		{
 			particlesPosArray[i] = (Math.random() - 0.5) * particlesBounds
 		}
-		this.geometry.setAttribute('position', new THREE.BufferAttribute(particlesPosArray, 3))
+		
+		geometry.setAttribute('position', new THREE.BufferAttribute(particlesPosArray, 3))
 
-		// Textures
-		const particlesDiffuse = resources.items['particles_a']
+		return geometry
+	}
 
-		// Material
-		this.material = new THREE.PointsMaterial({
+	initMaterial()
+	{
+		const particlesDiffuse = this.resources.items['particles_a']
+
+		return new THREE.PointsMaterial({
 			size: 0.1,
 			map: particlesDiffuse,
 			transparent: true,
 			opacity: 0.4
 		})
+	}
 
-		// Mesh
-		this.mesh = new THREE.Points(this.geometry, this.material)
+	initMesh()
+	{
+		return new THREE.Points(this.geometry, this.material)
 	}
 
 	update(elapsedTime)
