@@ -8,12 +8,12 @@ export default class Ground
 		this.geometry = new THREE.PlaneGeometry( 300, 300 )
 
 		// Textures
-		const groundDiffuse = resources.loaders.textureLoader.load('ground/ground_c.png')
-		var groundNormal = resources.loaders.textureLoader.load('ground/ground_n.png')
+		const groundDiffuse = resources.items['ground_c']
+		var groundNormal = resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
 		groundNormal.repeat.set( 4, 4 )
-		var groundCaustics = resources.loaders.textureLoader.load('ground/ground_caustics.png')
+		var groundCaustics = resources.items['ground_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
 		groundCaustics.wrapT = THREE.RepeatWrapping
 

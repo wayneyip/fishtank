@@ -48,22 +48,24 @@ scene.add(skyMesh)
 
 // Loaders
 var resources = new Resources()
+resources.on('ready', () => {
+	// Fish 
+	console.log("Ready: all resources loaded!")
+	var fish = new Fish(resources)
+	for (let f of fish.boidGroup.boids)
+	{
+		scene.add(f.mesh)
+	}
 
-// Fish
-var fish = new Fish(resources)
-console.log(fish.boidGroup)
-for (const boid of fish.boidGroup.boids)
-{
-	scene.add(boid.mesh)
-}
+	// Ground
+	var ground = new Ground(resources)
+	scene.add(ground.mesh)
 
-// Ground
-var ground = new Ground(resources)
-scene.add(ground.mesh)
+	// Particles
+	var particles = new Particles(resources)
+	scene.add(particles.mesh)
+})
 
-// Particles
-var particles = new Particles(resources)
-scene.add(particles.mesh)
 
 // Screen size
 const size = {
@@ -102,9 +104,9 @@ const tick = () => {
 
 	const elapsedTime = clock.getElapsedTime()
 
-	fish.update(elapsedTime)
-	ground.update(elapsedTime)
-	particles.update(elapsedTime)
+	// fish.update(elapsedTime)
+	// ground.update(elapsedTime)
+	// particles.update(elapsedTime)
 
 	// Render
 	renderer.render(scene, camera)

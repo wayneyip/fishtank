@@ -16,7 +16,7 @@ export default class Particles
 		this.geometry.setAttribute('position', new THREE.BufferAttribute(particlesPosArray, 3))
 
 		// Textures
-		const particlesDiffuse = resources.loaders.textureLoader.load('particles/particles_a.png')
+		const particlesDiffuse = resources.items['particles_a']
 
 		// Material
 		this.material = new THREE.PointsMaterial({
