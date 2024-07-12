@@ -1,9 +1,10 @@
 import * as THREE from 'three'
 import Resources from './Resources'
+import sources from './Sources'
+import Skybox from './Skybox'
 import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
-import sources from './Sources'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui'
 
@@ -31,28 +32,16 @@ scene.background = new THREE.Color( 0x02649a )
 const dirLight = new THREE.DirectionalLight()
 scene.add(dirLight)
 
-// Skybox
-const skySize = 1000
-const skyGeo = new THREE.SphereGeometry(skySize)
-const skyMat = new THREE.ShaderMaterial({
-	vertexShader: waterVertexShader,
-	fragmentShader: waterFragmentShader,
-	side: THREE.BackSide,
-	uniforms:
-	{
-		uTopColor: { value: new THREE.Vector4(1,1,1,1) },
-		uBottomColor: { value: new THREE.Vector4(0.007,0.392,0.604,1) }
-	}
-})
-const skyMesh = new THREE.Mesh(skyGeo, skyMat)
-scene.add(skyMesh)
-
 // Loaders
 let resources = new Resources(sources)
-let fish, ground, particles
+let skybox, fish, ground, particles
 
 resources.on('ready', () => {
-	
+
+	// Skybox
+	let skybox = new Skybox(resources)
+	scene.add(skybox.mesh)
+
 	// Fish 
 	fish = new Fish(resources)
 	for (let f of fish.boidGroup.boids)
