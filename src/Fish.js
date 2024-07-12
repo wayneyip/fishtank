@@ -1,24 +1,34 @@
 import * as THREE from 'three'
+import WorldObject from './WorldObject'
 import {BoidGroup} from './BoidGroup'
 import fishVertexShader from './shaders/fishVertex.glsl'
 import fishFragmentShader from './shaders/fishFragment.glsl'
 
-export default class Fish
+export default class Fish extends WorldObject
 {
 	constructor(resources)
 	{
-		// Mesh
-		const gltf = resources.items['fish_model']
-		console.log(gltf)
-		const mesh = gltf.scene.children[0]
-		this.geometry = mesh.geometry 
-		this.geometry.rotateX(0.5 * Math.PI)
+		super(resources)
+	}
 
+	initGeometry()
+	{
+		const gltf = this.resources.items['fish_model']
+		const mesh = gltf.scene.children[0]
+		let geometry = mesh.geometry 
+		
+		geometry.rotateX(0.5 * Math.PI)
+
+		return geometry
+	}
+
+	initMaterial()
+	{
 		// Texture
-		const fishTexture = resources.items['fish_c']
+		const fishTexture = this.resources.items['fish_c']
 
 		// Material
-		this.material = new THREE.ShaderMaterial({
+		let material = new THREE.ShaderMaterial({
 			vertexShader: fishVertexShader,
 			fragmentShader: fishFragmentShader,
 			uniforms: 
@@ -33,7 +43,11 @@ export default class Fish
 			}
 		})
 
-		// Boids 
+		return material
+	}
+
+	initMesh()
+	{
 		const boidCount = 100
 		const boidScale = 0.01
 		const spawnRange = 2
@@ -45,13 +59,10 @@ export default class Fish
 
 	update(elapsedTime)
 	{
-		if (this.boidGroup)
+		for (let boid of this.boidGroup.boids)
 		{
-			for (let boid of this.boidGroup.boids)
-			{
-				boid.mesh.material.uniforms.uTime.value = elapsedTime
-			}
-			boidGroup.simulate()
+			boid.mesh.material.uniforms.uTime.value = elapsedTime
 		}
+		boidGroup.simulate()
 	}
 }
