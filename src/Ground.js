@@ -1,24 +1,34 @@
 import * as THREE from 'three'
+import WorldObject from './WorldObject'
 
-export default class Ground 
+export default class Ground extends WorldObject
 {
 	constructor(resources)
 	{
-		// Geometry
-		this.geometry = new THREE.PlaneGeometry( 300, 300 )
+		super(resources)
+	}
 
+	initGeometry()
+	{
+		return new THREE.PlaneGeometry( 300, 300 )
+	}
+
+	initMaterial()
+	{
 		// Textures
-		const groundDiffuse = resources.items['ground_c']
-		var groundNormal = resources.items['ground_n']
+		const groundDiffuse = this.resources.items['ground_c']
+
+		let groundNormal = this.resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
 		groundNormal.repeat.set( 4, 4 )
-		var groundCaustics = resources.items['ground_caustics']
+
+		let groundCaustics = this.resources.items['ground_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
 		groundCaustics.wrapT = THREE.RepeatWrapping
 
 		// Material
-		this.material = new THREE.MeshStandardMaterial({
+		let material = new THREE.MeshStandardMaterial({
 			color: 0xbbbbee,
 			map: groundDiffuse,
 			normalMap: groundNormal
@@ -27,7 +37,7 @@ export default class Ground
 			uCausticsMap: { value: groundCaustics },
 			uTime: { value: 0 }
 		} 
-		this.material.onBeforeCompile = (shader) =>
+		material.onBeforeCompile = (shader) =>
 		{
 			shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
 			shader.uniforms.uTime = groundUniforms.uTime
@@ -47,20 +57,23 @@ export default class Ground
 				diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.01);
 				`
 			)
-			this.material.userData.shader = shader
+			material.userData.shader = shader
 		}
 
-		// Mesh
-		this.mesh = new THREE.Mesh(this.geometry, this.material)
-		this.mesh.rotateX(-0.5 * Math.PI)
-		this.mesh.position.y -= 15
+		return material
+	}
+
+	initMesh()
+	{
+		let mesh = new THREE.Mesh(this.geometry, this.material)
+		mesh.rotateX(-0.5 * Math.PI)
+		mesh.position.y -= 15
+
+		return mesh
 	}
 
 	update(elapsedTime)
 	{
-		if (this.material.userData.shader)
-		{
-			this.material.userData.shader.uniforms.uTime.value = elapsedTime
-		}
+		this.material.userData.shader.uniforms.uTime.value = elapsedTime
 	}
 }
