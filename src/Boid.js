@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import {randomNumber} from './Utils'
 
 const initialMaxSpeed = 0.01
 
@@ -35,10 +36,5 @@ class Boid
 		this.mesh.lookAt(this.aim)
 	}
 } 
-
-function randomNumber(min, max) 
-{
-	return Math.random() * (max - min) + min
-}
 
 export { Boid }

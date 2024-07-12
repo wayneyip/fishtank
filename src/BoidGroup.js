@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import {Boid} from './Boid'
+import {randomNumber} from './Utils'
 
 const cohesionFactor 		= 0.00005
 const alignmentFactor 		= 0.01
@@ -9,12 +10,7 @@ const boundsAvoidanceFactor = 0.001
 const boundsRange 			= 3
 const maxSpeed 				= 0.05
 
-function randomNumber(min, max) 
-{
-	return Math.random() * (max - min) + min
-}
-
-class BoidGroup
+export default class BoidGroup
 {
 	constructor(boidGeo, boidMat, boidCount, boidScale, spawnRange)
 	{
