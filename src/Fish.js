@@ -35,23 +35,21 @@ export default class Fish extends WorldObject
 	initMaterial()
 	{
 		// Texture
-		const fishTexture = this.resources.items['fish_c']
+		const fishDiffuse = this.resources.items['fish_c']
 
 		// Material
-		const material = new THREE.ShaderMaterial({
-			vertexShader: fishVertexShader,
-			fragmentShader: fishFragmentShader,
-			uniforms: 
-			{
-				uAmplitude	: { value: fishWaveAmplitude },
-				uWavelength	: { value: fishWavelength },
-				uWaveSpeed	: { value: fishWaveSpeed },
-				uOffset		: { value: fishWaveOffset },
-				uTime		: { value: 0 },
-				uMap 		: { value: fishTexture },
-				uTint 		: { value: fishTint },
-			}
+		const material = new THREE.MeshLambertMaterial({
+			map: fishDiffuse,
+			color: fishTint
 		})
+
+		this.uniforms = {
+			uAmplitude	: { value: fishWaveAmplitude },
+			uWavelength	: { value: fishWavelength },
+			uWaveSpeed	: { value: fishWaveSpeed },
+			uOffset		: { value: fishWaveOffset },
+			uTime		: { value: 0 },
+		}
 
 		return material
 	}
@@ -59,17 +57,13 @@ export default class Fish extends WorldObject
 	initMesh()
 	{
 		this.boidGroup = new BoidGroup(
-			this.geometry, this.material, 
+			this.geometry, this.material, this.uniforms,
 			boidCount, boidScale, boidSpawnRange
 		)
 	}
 
 	update(elapsedTime)
 	{
-		for (let boid of this.boidGroup.boids)
-		{
-			boid.mesh.material.uniforms.uTime.value = elapsedTime
-		}
-		this.boidGroup.simulate()
+		this.boidGroup.simulate(elapsedTime)
 	}
 }
