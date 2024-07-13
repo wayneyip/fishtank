@@ -1,6 +1,12 @@
 import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
+const particlesCount 	= 500
+const particlesBounds 	= 20
+const particleSize 		= 0.1
+const particleOpacity 	= 0.4
+const particleSpeed 	= 0.002
+
 export default class Particles extends WorldObject
 {
 	constructor(resources)
@@ -11,9 +17,6 @@ export default class Particles extends WorldObject
 	initGeometry()
 	{
 		const geometry = new THREE.BufferGeometry()
-
-		const particlesCount = 500
-		const particlesBounds = 20
 		const particlesPosArray = new Float32Array(particlesCount * 3)
 		
 		for (let i=0; i < particlesCount * 3; i++)
@@ -31,10 +34,10 @@ export default class Particles extends WorldObject
 		const particlesDiffuse = this.resources.items['particles_a']
 
 		return new THREE.PointsMaterial({
-			size: 0.1,
-			map: particlesDiffuse,
-			transparent: true,
-			opacity: 0.4
+			size  		: particleSize,
+			map 		: particlesDiffuse,
+			transparent	: true,
+			opacity 	: particleOpacity
 		})
 	}
 
@@ -47,6 +50,6 @@ export default class Particles extends WorldObject
 
 	update(elapsedTime)
 	{
-		this.mesh.rotation.x -= 0.002
+		this.mesh.rotation.x -= particleSpeed
 	}
 }

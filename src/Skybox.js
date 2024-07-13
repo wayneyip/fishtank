@@ -3,6 +3,11 @@ import WorldObject from './WorldObject'
 import waterVertexShader from './shaders/waterVertex.glsl'
 import waterFragmentShader from './shaders/waterFragment.glsl'
 
+const skySize 			= 1000
+const skyTopColor 		= new THREE.Vector4(1, 1, 1, 1)
+const skyBottomColor 	= new THREE.Vector4(0.007, 0.392, 0.604, 1)
+
+
 export default class Skybox extends WorldObject
 {
 	constructor(resources)
@@ -12,7 +17,6 @@ export default class Skybox extends WorldObject
 
 	initGeometry()
 	{
-		const skySize = 1000
 		const geometry = new THREE.SphereGeometry(skySize)
 
 		return geometry
@@ -21,13 +25,13 @@ export default class Skybox extends WorldObject
 	initMaterial()
 	{
 		const material = new THREE.ShaderMaterial({
-			vertexShader: waterVertexShader,
-			fragmentShader: waterFragmentShader,
-			side: THREE.BackSide,
-			uniforms:
+			vertexShader 	: waterVertexShader,
+			fragmentShader  : waterFragmentShader,
+			side 			: THREE.BackSide,
+			uniforms 		:
 			{
-				uTopColor: { value: new THREE.Vector4(1,1,1,1) },
-				uBottomColor: { value: new THREE.Vector4(0.007,0.392,0.604,1) }
+				uTopColor 	: { value: skyTopColor },
+				uBottomColor: { value: skyBottomColor }
 			}
 		})
 
