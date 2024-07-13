@@ -1,6 +1,11 @@
 import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
+const groundSize 				= 300
+const groundNormalRepeat 		= 4
+const groundTint 				= 0xbbbbee
+const groundCausticsScrollSpeed = 0.01
+
 export default class Ground extends WorldObject
 {
 	constructor(resources)
@@ -10,7 +15,7 @@ export default class Ground extends WorldObject
 
 	initGeometry()
 	{
-		return new THREE.PlaneGeometry( 300, 300 )
+		return new THREE.PlaneGeometry( groundSize, groundSize )
 	}
 
 	initMaterial()
@@ -21,7 +26,7 @@ export default class Ground extends WorldObject
 		const groundNormal = this.resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
-		groundNormal.repeat.set( 4, 4 )
+		groundNormal.repeat.set( groundNormalRepeat, groundNormalRepeat )
 
 		const groundCaustics = this.resources.items['ground_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
@@ -29,18 +34,22 @@ export default class Ground extends WorldObject
 
 		// Material
 		const material = new THREE.MeshStandardMaterial({
-			color: 0xbbbbee,
-			map: groundDiffuse,
-			normalMap: groundNormal
+			color 		: groundTint,
+			map 		: groundDiffuse,
+			normalMap	: groundNormal
 		})
+
 		const groundUniforms = {
 			uCausticsMap: { value: groundCaustics },
-			uTime: { value: 0 }
-		} 
+			uTime		: { value: 0 },
+			uSpeed 		: { value: groundCausticsScrollSpeed }
+		}
+
 		material.onBeforeCompile = (shader) =>
 		{
 			shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
 			shader.uniforms.uTime = groundUniforms.uTime
+			shader.uniforms.uSpeed = groundUniforms.uSpeed
 
 			shader.fragmentShader = shader.fragmentShader.replace(
 				'uniform vec3 diffuse;',
@@ -48,13 +57,14 @@ export default class Ground extends WorldObject
 				uniform vec3 diffuse;
 				uniform sampler2D uCausticsMap;
 				uniform float uTime;
+				uniform float uSpeed;
 				`
 			)
 			shader.fragmentShader = shader.fragmentShader.replace(
 				'#include <map_fragment>',
 				`
 				#include <map_fragment>
-				diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * 0.01);
+				diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * uSpeed);
 				`
 			)
 			material.userData.shader = shader
