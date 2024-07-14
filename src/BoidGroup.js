@@ -28,7 +28,7 @@ export default class BoidGroup
 				shader.uniforms.uTime = uniforms.uTime
 				
 				// Give each fish's material a different offset for sine wave
-				shader.uniforms.uOffset = randomNumber(0.0, 1000.0)
+				shader.uniforms.uOffset = randomNumber(0.0, 10.0)
 
 				shader.vertexShader = shader.vertexShader.replace(
 					'varying vec3 vViewPosition;',

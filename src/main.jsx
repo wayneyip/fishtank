@@ -32,7 +32,7 @@ dirLight.castShadow = true
 dirLight.position.y = 100
 scene.add(dirLight)
 const ambientLight = new THREE.AmbientLight()
-ambientLight.intensity = .1
+ambientLight.intensity = 1.0
 scene.add(ambientLight)
 
 // Loaders

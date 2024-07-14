@@ -5,7 +5,7 @@ import fishVertexShader from './shaders/fishVertex.glsl'
 import fishFragmentShader from './shaders/fishFragment.glsl'
 
 const fishWaveAmplitude = 5.0
-const fishWavelength 	= 0.05
+const fishWavelength 	= 0.08
 const fishWaveSpeed 	= 12.0
 const fishWaveOffset 	= 0.0
 const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
