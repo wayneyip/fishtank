@@ -26,6 +26,7 @@ export default class BoidGroup
 				shader.uniforms.uWavelength = uniforms.uWavelength
 				shader.uniforms.uWaveSpeed = uniforms.uWaveSpeed
 				shader.uniforms.uTime = uniforms.uTime
+				shader.uniforms.uCausticsMap = uniforms.uCausticsMap
 				
 				// Give each fish's material a different offset for sine wave
 				shader.uniforms.uOffset = randomNumber(0.0, 10.0)
@@ -48,6 +49,22 @@ export default class BoidGroup
 					transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
 					`
 				) 
+				shader.fragmentShader = shader.fragmentShader.replace(
+					'uniform vec3 diffuse;',
+					`
+					uniform vec3 diffuse;
+					uniform sampler2D uCausticsMap;
+					`
+				)
+				shader.fragmentShader = shader.fragmentShader.replace(
+					'vec4 diffuseColor = vec4( diffuse, opacity );',
+					`
+					vec4 diffuseColor = vec4( diffuse, opacity );
+					diffuseColor += texture2D( uCausticsMap, vMapUv * 0.1 );
+
+					`
+				) 
+
 				boidMatClone.userData.shader = shader
 			}
 			const mesh = new THREE.Mesh(boidGeo, boidMatClone)	
@@ -147,7 +164,7 @@ export default class BoidGroup
 			boid.velocity.clampLength(0, maxSpeed)
 			
 			// Move boid using updated velocity
-			boid.move()
+			// boid.move()
 		}
 	}
 }

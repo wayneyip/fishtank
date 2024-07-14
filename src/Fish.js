@@ -36,6 +36,7 @@ export default class Fish extends WorldObject
 	{
 		// Texture
 		const fishDiffuse = this.resources.items['fish_c']
+		const fishCaustics = this.resources.items['ground_caustics']
 
 		// Material
 		const material = new THREE.MeshLambertMaterial({
@@ -49,6 +50,7 @@ export default class Fish extends WorldObject
 			uWaveSpeed	: { value: fishWaveSpeed },
 			uOffset		: { value: fishWaveOffset },
 			uTime		: { value: 0 },
+			uCausticsMap: { value: fishCaustics }
 		}
 
 		return material
