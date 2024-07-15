@@ -5,7 +5,7 @@ import fishVertexShader from './shaders/fishVertex.glsl'
 import fishFragmentShader from './shaders/fishFragment.glsl'
 
 const fishWaveAmplitude = 5.0
-const fishWavelength 	= 0.05
+const fishWavelength 	= 0.08
 const fishWaveSpeed 	= 12.0
 const fishWaveOffset 	= 0.0
 const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
@@ -35,23 +35,23 @@ export default class Fish extends WorldObject
 	initMaterial()
 	{
 		// Texture
-		const fishTexture = this.resources.items['fish_c']
+		const fishDiffuse = this.resources.items['fish_c']
+		const fishCaustics = this.resources.items['ground_caustics']
 
 		// Material
-		const material = new THREE.ShaderMaterial({
-			vertexShader: fishVertexShader,
-			fragmentShader: fishFragmentShader,
-			uniforms: 
-			{
-				uAmplitude	: { value: fishWaveAmplitude },
-				uWavelength	: { value: fishWavelength },
-				uWaveSpeed	: { value: fishWaveSpeed },
-				uOffset		: { value: fishWaveOffset },
-				uTime		: { value: 0 },
-				uMap 		: { value: fishTexture },
-				uTint 		: { value: fishTint },
-			}
+		const material = new THREE.MeshLambertMaterial({
+			map: fishDiffuse,
+			color: fishTint
 		})
+
+		this.uniforms = {
+			uAmplitude	: { value: fishWaveAmplitude },
+			uWavelength	: { value: fishWavelength },
+			uWaveSpeed	: { value: fishWaveSpeed },
+			uOffset		: { value: fishWaveOffset },
+			uTime		: { value: 0 },
+			uCausticsMap: { value: fishCaustics }
+		}
 
 		return material
 	}
@@ -59,17 +59,13 @@ export default class Fish extends WorldObject
 	initMesh()
 	{
 		this.boidGroup = new BoidGroup(
-			this.geometry, this.material, 
+			this.geometry, this.material, this.uniforms,
 			boidCount, boidScale, boidSpawnRange
 		)
 	}
 
 	update(elapsedTime)
 	{
-		for (let boid of this.boidGroup.boids)
-		{
-			boid.mesh.material.uniforms.uTime.value = elapsedTime
-		}
-		this.boidGroup.simulate()
+		this.boidGroup.simulate(elapsedTime)
 	}
 }

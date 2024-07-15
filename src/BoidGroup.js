@@ -12,17 +12,75 @@ const maxSpeed 				= 0.05
 
 export default class BoidGroup
 {
-	constructor(boidGeo, boidMat, boidCount, boidScale, spawnRange)
+	constructor(boidGeo, boidMat, uniforms, boidCount, boidScale, spawnRange)
 	{
 		this.boids = []
 
 		for (let i=0; i < boidCount; i++)
 		{
-			// Give each fish's material a different offset for sine wave
 			const boidMatClone = boidMat.clone()
-			boidMatClone.uniforms.uOffset.value = randomNumber(0.0, 1000.0)
 
+			boidMatClone.onBeforeCompile = (shader) =>
+			{
+				shader.uniforms.uAmplitude = uniforms.uAmplitude
+				shader.uniforms.uWavelength = uniforms.uWavelength
+				shader.uniforms.uWaveSpeed = uniforms.uWaveSpeed
+				shader.uniforms.uTime = uniforms.uTime
+				shader.uniforms.uCausticsMap = uniforms.uCausticsMap
+				
+				// Give each fish's material a different offset for sine wave
+				shader.uniforms.uOffset = randomNumber(0.0, 10.0)
+
+				shader.vertexShader = shader.vertexShader.replace(
+					'varying vec3 vViewPosition;',
+					`
+					varying vec3 vViewPosition;
+					varying vec2 vUv;
+
+					uniform float uAmplitude;
+					uniform float uWavelength;
+					uniform float uOffset;
+					uniform float uWaveSpeed;
+					uniform float uTime;
+					`
+				)
+				shader.vertexShader = shader.vertexShader.replace(
+					'#include <begin_vertex>',
+					`
+					#include <begin_vertex>
+					transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
+					vUv = uv;
+					`
+				) 
+				shader.vertexShader = shader.vertexShader.replace(
+					'#include <worldpos_vertex>',
+					`
+					#include <worldpos_vertex>
+					vUv = worldPosition.xz;
+					`
+				) 
+				shader.fragmentShader = shader.fragmentShader.replace(
+					'uniform vec3 diffuse;',
+					`
+					varying vec2 vUv;
+					uniform vec3 diffuse;
+					uniform sampler2D uCausticsMap;
+					`
+				)
+				shader.fragmentShader = shader.fragmentShader.replace(
+					'vec4 diffuseColor = vec4( diffuse, opacity );',
+					`
+					vec4 diffuseColor = vec4( diffuse, opacity );
+					diffuseColor += texture2D( uCausticsMap, vUv * 0.1 );
+					`
+				) 
+
+				boidMatClone.userData.shader = shader
+			}
 			const mesh = new THREE.Mesh(boidGeo, boidMatClone)	
+			mesh.castShadow = true
+			mesh.receiveShadow = true
+
 			const boid = new Boid(mesh, boidScale, spawnRange)
 			this.boids.push(boid)
 		}
@@ -36,10 +94,15 @@ export default class BoidGroup
 		this.boundsAvoidance = new THREE.Vector3(0,0,0)
 	}
 
-	simulate()
+	simulate(elapsedTime)
 	{
 		for (let boid of this.boids)
 		{
+			if (boid.mesh.material.userData.shader)
+			{
+				boid.mesh.material.userData.shader.uniforms.uTime.value = elapsedTime
+			}
+
 			this.perceivedCenter.set(0,0,0)
 			this.perceivedVelocity.set(0,0,0)
 			this.displacement.set(0,0,0)

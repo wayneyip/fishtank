@@ -28,7 +28,12 @@ scene.background = new THREE.Color( 0x02649a )
 
 // Lighting
 const dirLight = new THREE.DirectionalLight()
+dirLight.castShadow = true
+dirLight.position.y = 100
 scene.add(dirLight)
+const ambientLight = new THREE.AmbientLight()
+ambientLight.intensity = 1.0
+scene.add(ambientLight)
 
 // Loaders
 const resources = new Resources(sources)
@@ -82,6 +87,7 @@ const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 	antialias: true
 })
+renderer.shadowMap.enabled = true
 renderer.setSize(size.width, size.height)
 
 // Controls
