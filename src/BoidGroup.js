@@ -35,6 +35,8 @@ export default class BoidGroup
 					'varying vec3 vViewPosition;',
 					`
 					varying vec3 vViewPosition;
+					varying vec2 vUv;
+
 					uniform float uAmplitude;
 					uniform float uWavelength;
 					uniform float uOffset;
@@ -47,11 +49,20 @@ export default class BoidGroup
 					`
 					#include <begin_vertex>
 					transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
+					vUv = uv;
+					`
+				) 
+				shader.vertexShader = shader.vertexShader.replace(
+					'#include <worldpos_vertex>',
+					`
+					#include <worldpos_vertex>
+					vUv = worldPosition.xz;
 					`
 				) 
 				shader.fragmentShader = shader.fragmentShader.replace(
 					'uniform vec3 diffuse;',
 					`
+					varying vec2 vUv;
 					uniform vec3 diffuse;
 					uniform sampler2D uCausticsMap;
 					`
@@ -60,8 +71,7 @@ export default class BoidGroup
 					'vec4 diffuseColor = vec4( diffuse, opacity );',
 					`
 					vec4 diffuseColor = vec4( diffuse, opacity );
-					diffuseColor += texture2D( uCausticsMap, vMapUv * 0.1 );
-
+					diffuseColor += texture2D( uCausticsMap, vUv * 0.1 );
 					`
 				) 
 
@@ -164,7 +174,7 @@ export default class BoidGroup
 			boid.velocity.clampLength(0, maxSpeed)
 			
 			// Move boid using updated velocity
-			// boid.move()
+			boid.move()
 		}
 	}
 }
