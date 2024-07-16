@@ -4,6 +4,8 @@ uniform sampler2D uMap;
 uniform vec4 uTint;
 uniform float uRadialScale;
 uniform float uLengthScale;
+uniform float uTime;
+uniform float uSpeed;
 
 varying vec2 vUv;
 
@@ -16,6 +18,7 @@ void main()
 	float angle = atan(delta.x, delta.y) * 1.0/6.28 * uLengthScale;
 	
 	vec2 polarUv = vec2(radius, angle);
+	polarUv.x = polarUv.x + uTime * uSpeed;
 
 	vec4 noise = texture2D(uMap, polarUv);
 

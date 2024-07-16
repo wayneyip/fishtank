@@ -34,6 +34,8 @@ export default class Godrays extends WorldObject
 				uTint: { value: new THREE.Vector4(1.0,1.0,0.0,1.0) },
 				uRadialScale: { value: -0.02 },
 				uLengthScale: { value: 2.58 },
+				uTime: { value: 0 },
+				uSpeed: { value: 0.05 }
 			}
 		})
 		return material
@@ -51,5 +53,10 @@ export default class Godrays extends WorldObject
 		mesh.position.y = 4
 
 		return mesh
+	}
+
+	update(elapsedTime)
+	{
+		this.material.uniforms.uTime.value = elapsedTime
 	}
 }

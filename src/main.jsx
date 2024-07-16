@@ -38,16 +38,16 @@ scene.add(ambientLight)
 
 // Loaders
 const resources = new Resources(sources)
-let skybox, fish, ground, particles
+let skybox, fish, ground, particles, godrays
 
 resources.on('ready', () => {
 
 	// Skybox
-	const skybox = new Skybox(resources)
+	skybox = new Skybox(resources)
 	scene.add(skybox.mesh)
 
 	// Godrays
-	const godrays = new Godrays(resources)
+	godrays = new Godrays(resources)
 	scene.add(godrays.mesh)
 
 	// Fish 
@@ -110,6 +110,9 @@ const tick = () => {
 		ground.update(elapsedTime)
 	if (particles)
 		particles.update(elapsedTime)
+	if (godrays)
+		// console.log("asd")
+		godrays.update(elapsedTime)
 
 	// Render
 	renderer.render(scene, camera)
