@@ -16,7 +16,7 @@ export default class Godrays extends WorldObject
 			5, 		// radius
 			5,		// height
 			32, 	// radialSegments
-			1,		// heightSegments
+			6,		// heightSegments
 			true	// openEnded
 		) 
 		return geometry
@@ -24,11 +24,23 @@ export default class Godrays extends WorldObject
 
 	initMaterial()
 	{
+		// Texture
+		const noise = this.resources.items['ground_caustics']
+
+		// Material
+		// const material = new THREE.MeshLambertMaterial({
+		// 	map: noise,
+		// 	side: THREE.DoubleSide
+		// })
 		const material = new THREE.ShaderMaterial({
 			vertexShader: godraysVertexShader,
 			fragmentShader: godraysFragmentShader,
 			side: THREE.DoubleSide,
-			transparent: true
+			// transparent: true,
+			uniforms: {
+				uMap: { value: noise },
+				uTint: { value: new THREE.Vector4(1.0,1.0,0.0,1.0) }
+			}
 		})
 		return material
 	}

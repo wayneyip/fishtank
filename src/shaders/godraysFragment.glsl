@@ -1,4 +1,13 @@
+precision mediump float;
+
+uniform sampler2D uMap;
+uniform vec4 uTint;
+
+varying vec2 vUv;
+
 void main()
 {
-	gl_FragColor = vec4(0.0,1.0,0.0,1.0);
+	vec4 noise = texture2D(uMap, vUv);
+
+	gl_FragColor = noise * uTint;
 }
