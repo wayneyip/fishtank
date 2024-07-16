@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Resources from './Resources'
 import sources from './Sources'
 import Skybox from './Skybox'
+import Godrays from './Godrays'
 import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
@@ -44,6 +45,10 @@ resources.on('ready', () => {
 	// Skybox
 	const skybox = new Skybox(resources)
 	scene.add(skybox.mesh)
+
+	// Godrays
+	const godrays = new Godrays(resources)
+	scene.add(godrays.mesh)
 
 	// Fish 
 	fish = new Fish(resources)
