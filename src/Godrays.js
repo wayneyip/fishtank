@@ -45,15 +45,11 @@ export default class Godrays extends WorldObject
 	initMesh()
 	{
 		const mesh = new THREE.Mesh(this.geometry, this.material)
-		
-		mesh.scale.x = 0.3
-		mesh.scale.y = 0.3
-		mesh.scale.z = 0.3
 
 		mesh.rotateX(0.5 * Math.PI)
 		mesh.rotateZ(1.0 * Math.PI)
 		
-		mesh.position.y = 4
+		mesh.position.y = 2
 
 		return mesh
 	}
