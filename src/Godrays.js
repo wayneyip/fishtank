@@ -5,20 +5,17 @@ import godraysFragmentShader from './shaders/godraysFragment.glsl'
 
 export default class Godrays extends WorldObject
 {
-	constructor(resources)
+	constructor(resources, gui)
 	{
 		super(resources)
 	}
 
 	initGeometry()
 	{
-		const geometry = new THREE.ConeGeometry(
-			5, 		// radius
-			5,		// height
-			32, 	// radialSegments
-			6,		// heightSegments
-			true	// openEnded
-		) 
+		const gltf = this.resources.items['godrays_model']
+		const mesh = gltf.scene.children[0]
+		const geometry = mesh.geometry
+
 		return geometry
 	}
 
@@ -27,11 +24,6 @@ export default class Godrays extends WorldObject
 		// Texture
 		const noise = this.resources.items['ground_caustics']
 
-		// Material
-		// const material = new THREE.MeshLambertMaterial({
-		// 	map: noise,
-		// 	side: THREE.DoubleSide
-		// })
 		const material = new THREE.ShaderMaterial({
 			vertexShader: godraysVertexShader,
 			fragmentShader: godraysFragmentShader,
@@ -39,7 +31,9 @@ export default class Godrays extends WorldObject
 			// transparent: true,
 			uniforms: {
 				uMap: { value: noise },
-				uTint: { value: new THREE.Vector4(1.0,1.0,0.0,1.0) }
+				uTint: { value: new THREE.Vector4(1.0,1.0,0.0,1.0) },
+				uRadialScale: { value: -0.02 },
+				uLengthScale: { value: 2.58 },
 			}
 		})
 		return material
@@ -48,7 +42,14 @@ export default class Godrays extends WorldObject
 	initMesh()
 	{
 		const mesh = new THREE.Mesh(this.geometry, this.material)
+		
+		mesh.scale.x = 0.3
+		mesh.scale.y = 0.3
+		mesh.scale.z = 0.3
+		mesh.rotateX(0.5 * Math.PI)
+		
 		mesh.position.y = 4
+
 		return mesh
 	}
 }

@@ -1,5 +1,10 @@
 export default [
 	{
+		name: 'godrays_model',
+		type: 'gltfModel',
+		path: 'godrays/godrays_cone.gltf'
+	},
+	{
 		name: 'fish_model',
 		type: 'gltfModel',
 		path: 'fish/fish.gltf'
