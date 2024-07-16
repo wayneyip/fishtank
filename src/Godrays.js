@@ -3,6 +3,12 @@ import WorldObject from './WorldObject'
 import godraysVertexShader from './shaders/godraysVertex.glsl'
 import godraysFragmentShader from './shaders/godraysFragment.glsl'
 
+const godrayTint 		= new THREE.Vector4(0.8, 0.8, 0.75, 1.0)
+const godrayRadialScale = -0.02
+const godrayLengthScale = 2.58
+const godraySpeed 		= 0.05
+const godrayIntensity 	= 0.1
+
 export default class Godrays extends WorldObject
 {
 	constructor(resources, gui)
@@ -30,13 +36,13 @@ export default class Godrays extends WorldObject
 			side: THREE.DoubleSide,
 			transparent: true,
 			uniforms: {
-				uMap: { value: noise },
-				uTint: { value: new THREE.Vector4(.8,.8,.75,1.0) },
-				uRadialScale: { value: -0.02 },
-				uLengthScale: { value: 2.58 },
-				uTime: { value: 0 },
-				uSpeed: { value: 0.05 },
-				uIntensity: { value: 0.1 }
+				uMap 		: { value: noise },
+				uTint 		: { value: godrayTint },
+				uRadialScale: { value: godrayRadialScale },
+				uLengthScale: { value: godrayLengthScale },
+				uTime 		: { value: 0 },
+				uSpeed 		: { value: godraySpeed },
+				uIntensity	: { value: godrayIntensity }
 			}
 		})
 		return material

@@ -111,7 +111,6 @@ const tick = () => {
 	if (particles)
 		particles.update(elapsedTime)
 	if (godrays)
-		// console.log("asd")
 		godrays.update(elapsedTime)
 
 	// Render
