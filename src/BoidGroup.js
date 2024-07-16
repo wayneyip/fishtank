@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Boid from './Boid'
 import {randomNumber} from './Utils'
 
-const cohesionFactor 		= 0.00005
+const cohesionFactor 		= 0.00004
 const alignmentFactor 		= 0.01
 const separationFactor 		= 0.01
 const separationDistance	= 0.8
@@ -71,7 +71,7 @@ export default class BoidGroup
 					'vec4 diffuseColor = vec4( diffuse, opacity );',
 					`
 					vec4 diffuseColor = vec4( diffuse, opacity );
-					diffuseColor += texture2D( uCausticsMap, vUv * 0.1 );
+					diffuseColor += texture2D( uCausticsMap, vUv * 0.4 );
 					`
 				) 
 

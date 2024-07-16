@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Resources from './Resources'
 import sources from './Sources'
 import Skybox from './Skybox'
+import Godrays from './Godrays'
 import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
@@ -37,13 +38,17 @@ scene.add(ambientLight)
 
 // Loaders
 const resources = new Resources(sources)
-let skybox, fish, ground, particles
+let skybox, fish, ground, particles, godrays
 
 resources.on('ready', () => {
 
 	// Skybox
-	const skybox = new Skybox(resources)
+	skybox = new Skybox(resources)
 	scene.add(skybox.mesh)
+
+	// Godrays
+	godrays = new Godrays(resources)
+	scene.add(godrays.mesh)
 
 	// Fish 
 	fish = new Fish(resources)
@@ -105,6 +110,8 @@ const tick = () => {
 		ground.update(elapsedTime)
 	if (particles)
 		particles.update(elapsedTime)
+	if (godrays)
+		godrays.update(elapsedTime)
 
 	// Render
 	renderer.render(scene, camera)
