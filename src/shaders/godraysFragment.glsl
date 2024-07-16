@@ -6,6 +6,7 @@ uniform float uRadialScale;
 uniform float uLengthScale;
 uniform float uTime;
 uniform float uSpeed;
+uniform float uIntensity;
 
 varying vec2 vUv;
 varying vec3 vPos;
@@ -28,7 +29,7 @@ void main()
 	// Vertical fade
 	float verticalFade = mix(1.0, 0.0, vPos.z);
 
-	float alpha = radialAlpha * verticalFade;
+	float alpha = radialAlpha * verticalFade * uIntensity;
 
 	gl_FragColor = vec4(uTint.xyz, alpha);
 }

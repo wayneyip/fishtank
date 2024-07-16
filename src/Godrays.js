@@ -35,7 +35,8 @@ export default class Godrays extends WorldObject
 				uRadialScale: { value: -0.02 },
 				uLengthScale: { value: 2.58 },
 				uTime: { value: 0 },
-				uSpeed: { value: 0.05 }
+				uSpeed: { value: 0.05 },
+				uIntensity: { value: 0.1 }
 			}
 		})
 		return material
