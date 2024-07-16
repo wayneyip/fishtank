@@ -21,6 +21,7 @@ void main()
 	polarUv.x = polarUv.x + uTime * uSpeed;
 
 	vec4 noise = texture2D(uMap, polarUv);
+	float alpha = dot(noise.xyz, vec3(0.3, 0.59, 0.11));
 
-	gl_FragColor = noise * uTint;
+	gl_FragColor = vec4(uTint.xyz, alpha);
 }

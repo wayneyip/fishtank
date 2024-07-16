@@ -28,10 +28,10 @@ export default class Godrays extends WorldObject
 			vertexShader: godraysVertexShader,
 			fragmentShader: godraysFragmentShader,
 			side: THREE.DoubleSide,
-			// transparent: true,
+			transparent: true,
 			uniforms: {
 				uMap: { value: noise },
-				uTint: { value: new THREE.Vector4(1.0,1.0,0.0,1.0) },
+				uTint: { value: new THREE.Vector4(.8,.8,.75,1.0) },
 				uRadialScale: { value: -0.02 },
 				uLengthScale: { value: 2.58 },
 				uTime: { value: 0 },
@@ -48,7 +48,9 @@ export default class Godrays extends WorldObject
 		mesh.scale.x = 0.3
 		mesh.scale.y = 0.3
 		mesh.scale.z = 0.3
+
 		mesh.rotateX(0.5 * Math.PI)
+		mesh.rotateZ(1.0 * Math.PI)
 		
 		mesh.position.y = 4
 
