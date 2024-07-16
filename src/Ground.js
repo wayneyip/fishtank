@@ -2,9 +2,8 @@ import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
 const groundSize 				= 300
-const groundNormalRepeat 		= 4
 const groundTint 				= 0xbbbbee
-const groundCausticsScrollSpeed = 0.01
+const groundCausticsScrollSpeed = 0.025
 
 export default class Ground extends WorldObject
 {
@@ -26,7 +25,6 @@ export default class Ground extends WorldObject
 		const groundNormal = this.resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
-		groundNormal.repeat.set( groundNormalRepeat, groundNormalRepeat )
 
 		const groundCaustics = this.resources.items['ground_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
@@ -64,7 +62,7 @@ export default class Ground extends WorldObject
 				'#include <map_fragment>',
 				`
 				#include <map_fragment>
-				diffuseColor += texture2D(uCausticsMap, vMapUv + uTime * uSpeed);
+				diffuseColor += texture2D(uCausticsMap, 4.0 * vMapUv + uTime * uSpeed);
 				`
 			)
 			material.userData.shader = shader
