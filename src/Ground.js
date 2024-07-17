@@ -62,7 +62,9 @@ export default class Ground extends WorldObject
 				'#include <map_fragment>',
 				`
 				#include <map_fragment>
-				diffuseColor += texture2D(uCausticsMap, 4.0 * vMapUv + uTime * uSpeed);
+				vec4 noiseSample1 = texture2D(uCausticsMap, 4.0 * vMapUv + uTime * uSpeed);
+				vec4 noiseSample2 = texture2D(uCausticsMap, 3.0 * vMapUv - uTime * uSpeed);
+				diffuseColor += noiseSample1 + noiseSample2;
 				`
 			)
 			material.userData.shader = shader
