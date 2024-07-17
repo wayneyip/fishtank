@@ -30,10 +30,11 @@ scene.background = new THREE.Color( 0x02649a )
 // Lighting
 const dirLight = new THREE.DirectionalLight()
 dirLight.castShadow = true
+dirLight.intensity = 1.5
 dirLight.position.y = 100
 scene.add(dirLight)
 const ambientLight = new THREE.AmbientLight()
-ambientLight.intensity = 1.0
+ambientLight.intensity = 0.8
 scene.add(ambientLight)
 
 // Loaders
@@ -85,6 +86,7 @@ window.addEventListener('resize', () =>
 // Camera
 const camera = new THREE.PerspectiveCamera(45, size.width/size.height)
 camera.position.z = 10
+camera.rotateX( 0.05 * Math.PI )
 scene.add(camera)
 
 // Renderer
@@ -96,7 +98,7 @@ renderer.shadowMap.enabled = true
 renderer.setSize(size.width, size.height)
 
 // Controls
-const controls = new OrbitControls( camera, renderer.domElement );
+// const controls = new OrbitControls( camera, renderer.domElement );
 
 // Time
 const clock = new THREE.Clock()

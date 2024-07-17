@@ -1,11 +1,11 @@
 import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
-const particlesCount 	= 500
-const particlesBounds 	= 20
-const particleSize 		= 0.1
-const particleOpacity 	= 0.4
-const particleSpeed 	= 0.002
+const particlesCount 	= 1000
+const particlesBounds 	= 15
+const particleSize 		= 0.04
+const particleOpacity 	= 0.5
+const particleSpeed 	= 0.0003
 
 export default class Particles extends WorldObject
 {
@@ -37,7 +37,7 @@ export default class Particles extends WorldObject
 			size  		: particleSize,
 			map 		: particlesDiffuse,
 			transparent	: true,
-			opacity 	: particleOpacity
+			opacity 	: particleOpacity,
 		})
 	}
 

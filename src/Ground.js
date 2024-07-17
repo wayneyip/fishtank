@@ -3,7 +3,8 @@ import WorldObject from './WorldObject'
 
 const groundSize 				= 300
 const groundTint 				= 0xbbbbee
-const groundCausticsScrollSpeed = 0.025
+const groundCausticsScrollSpeed = 0.04
+const groundCausticsTint		= new THREE.Vector4(0.5, 0.5, 0.6, 1.0)
 
 export default class Ground extends WorldObject
 {
@@ -38,14 +39,16 @@ export default class Ground extends WorldObject
 		})
 
 		const groundUniforms = {
-			uCausticsMap: { value: groundCaustics },
-			uTime		: { value: 0 },
-			uSpeed 		: { value: groundCausticsScrollSpeed }
+			uCausticsMap	: { value: groundCaustics },
+			uCausticsTint	: { value: groundCausticsTint }, 
+			uTime			: { value: 0 },
+			uSpeed 			: { value: groundCausticsScrollSpeed },
 		}
 
 		material.onBeforeCompile = (shader) =>
 		{
 			shader.uniforms.uCausticsMap = groundUniforms.uCausticsMap
+			shader.uniforms.uCausticsTint = groundUniforms.uCausticsTint
 			shader.uniforms.uTime = groundUniforms.uTime
 			shader.uniforms.uSpeed = groundUniforms.uSpeed
 
@@ -54,6 +57,7 @@ export default class Ground extends WorldObject
 				`
 				uniform vec3 diffuse;
 				uniform sampler2D uCausticsMap;
+				uniform vec4 uCausticsTint;
 				uniform float uTime;
 				uniform float uSpeed;
 				`
@@ -62,7 +66,9 @@ export default class Ground extends WorldObject
 				'#include <map_fragment>',
 				`
 				#include <map_fragment>
-				diffuseColor += texture2D(uCausticsMap, 4.0 * vMapUv + uTime * uSpeed);
+				vec4 noiseSample1 = texture2D(uCausticsMap, 4.0 * vMapUv + uTime * uSpeed);
+				vec4 noiseSample2 = texture2D(uCausticsMap, 3.0 * vMapUv - uTime * uSpeed);
+				diffuseColor += uCausticsTint * (noiseSample1 + noiseSample2);
 				`
 			)
 			material.userData.shader = shader
