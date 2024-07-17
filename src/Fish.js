@@ -58,12 +58,11 @@ export default class Fish extends WorldObject
 			shader.uniforms.uAmplitude = uniforms.uAmplitude
 			shader.uniforms.uWavelength = uniforms.uWavelength
 			shader.uniforms.uWaveSpeed = uniforms.uWaveSpeed
+			shader.uniforms.uOffset = fishWaveOffset
 			shader.uniforms.uTime = uniforms.uTime
 			shader.uniforms.uCausticsMap = uniforms.uCausticsMap
 			
-			// Give each fish's material a different offset for sine wave
-			shader.uniforms.uOffset = fishWaveOffset
-			
+			// Vertex shader: parameters
 			shader.vertexShader = shader.vertexShader.replace(
 				'varying vec3 vViewPosition;',
 				`
@@ -77,6 +76,7 @@ export default class Fish extends WorldObject
 				uniform float uTime;
 				`
 			)
+			// Vertex shader: sine wave animation
 			shader.vertexShader = shader.vertexShader.replace(
 				'#include <begin_vertex>',
 				`
@@ -84,7 +84,8 @@ export default class Fish extends WorldObject
 				transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
 				vUv = uv;
 				`
-			) 
+			)
+			// Vertex shader: save world position to UV
 			shader.vertexShader = shader.vertexShader.replace(
 				'#include <worldpos_vertex>',
 				`
@@ -92,6 +93,7 @@ export default class Fish extends WorldObject
 				vUv = worldPosition.xz;
 				`
 			) 
+			// Fragment shader: parameters
 			shader.fragmentShader = shader.fragmentShader.replace(
 				'uniform vec3 diffuse;',
 				`
@@ -100,6 +102,7 @@ export default class Fish extends WorldObject
 				uniform sampler2D uCausticsMap;
 				`
 			)
+			// Fragment shader: apply caustics
 			shader.fragmentShader = shader.fragmentShader.replace(
 				'vec4 diffuseColor = vec4( diffuse, opacity );',
 				`
