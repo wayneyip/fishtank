@@ -5,9 +5,9 @@ import godraysFragmentShader from './shaders/godraysFragment.glsl'
 
 const godrayTint 		= new THREE.Vector4(0.8, 0.8, 0.9, 1.0)
 const godrayRadialScale = -0.02
-const godrayLengthScale = 2.58
+const godrayLengthScale = 1.58
 const godraySpeed 		= 0.05
-const godrayIntensity 	= 0.05
+const godrayIntensity 	= 0.08
 
 export default class Godrays extends WorldObject
 {
