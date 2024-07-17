@@ -85,6 +85,7 @@ window.addEventListener('resize', () =>
 // Camera
 const camera = new THREE.PerspectiveCamera(45, size.width/size.height)
 camera.position.z = 10
+camera.rotateX( 0.05 * Math.PI )
 scene.add(camera)
 
 // Renderer
@@ -96,7 +97,7 @@ renderer.shadowMap.enabled = true
 renderer.setSize(size.width, size.height)
 
 // Controls
-const controls = new OrbitControls( camera, renderer.domElement );
+// const controls = new OrbitControls( camera, renderer.domElement );
 
 // Time
 const clock = new THREE.Clock()
