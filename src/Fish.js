@@ -9,6 +9,7 @@ const fishWavelength 	= 0.08
 const fishWaveSpeed 	= 12.0
 const fishWaveOffset 	= 0.0
 const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
+const fishCausticsScale	= 0.4 
 
 const boidCount 		= 100
 const boidScale 		= 0.01
@@ -45,12 +46,13 @@ export default class Fish extends WorldObject
 		})
 
 		const uniforms = {
-			uAmplitude	: { value: fishWaveAmplitude },
-			uWavelength	: { value: fishWavelength },
-			uWaveSpeed	: { value: fishWaveSpeed },
-			uOffset		: { value: fishWaveOffset },
-			uTime		: { value: 0 },
-			uCausticsMap: { value: fishCaustics }
+			uAmplitude		: { value: fishWaveAmplitude },
+			uWavelength		: { value: fishWavelength },
+			uWaveSpeed		: { value: fishWaveSpeed },
+			uOffset			: { value: fishWaveOffset },
+			uTime			: { value: 0 },
+			uCausticsMap	: { value: fishCaustics },
+			uCausticsScale	: { value: fishCausticsScale },
 		}
 
 		material.onBeforeCompile = (shader) =>
@@ -61,6 +63,7 @@ export default class Fish extends WorldObject
 			shader.uniforms.uOffset = fishWaveOffset
 			shader.uniforms.uTime = uniforms.uTime
 			shader.uniforms.uCausticsMap = uniforms.uCausticsMap
+			shader.uniforms.uCausticsScale = uniforms.uCausticsScale
 			
 			// Vertex shader: parameters
 			shader.vertexShader = shader.vertexShader.replace(
@@ -100,6 +103,7 @@ export default class Fish extends WorldObject
 				varying vec2 vUv;
 				uniform vec3 diffuse;
 				uniform sampler2D uCausticsMap;
+				uniform float uCausticsScale;
 				`
 			)
 			// Fragment shader: apply caustics
@@ -107,7 +111,7 @@ export default class Fish extends WorldObject
 				'vec4 diffuseColor = vec4( diffuse, opacity );',
 				`
 				vec4 diffuseColor = vec4( diffuse, opacity );
-				diffuseColor += texture2D( uCausticsMap, vUv * 0.4 );
+				diffuseColor += texture2D( uCausticsMap, vUv * uCausticsScale );
 				`
 			) 
 
