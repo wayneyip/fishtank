@@ -9,6 +9,7 @@ const fishWavelength 	= 0.08
 const fishWaveSpeed 	= 12.0
 const fishWaveOffset 	= 0.0
 const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
+const fishCausticsScale	= 0.4 
 
 const boidCount 		= 100
 const boidScale 		= 0.01
@@ -44,13 +45,77 @@ export default class Fish extends WorldObject
 			color: fishTint
 		})
 
-		this.uniforms = {
-			uAmplitude	: { value: fishWaveAmplitude },
-			uWavelength	: { value: fishWavelength },
-			uWaveSpeed	: { value: fishWaveSpeed },
-			uOffset		: { value: fishWaveOffset },
-			uTime		: { value: 0 },
-			uCausticsMap: { value: fishCaustics }
+		const uniforms = {
+			uAmplitude		: { value: fishWaveAmplitude },
+			uWavelength		: { value: fishWavelength },
+			uWaveSpeed		: { value: fishWaveSpeed },
+			uOffset			: { value: fishWaveOffset },
+			uTime			: { value: 0 },
+			uCausticsMap	: { value: fishCaustics },
+			uCausticsScale	: { value: fishCausticsScale },
+		}
+
+		material.onBeforeCompile = (shader) =>
+		{
+			shader.uniforms.uAmplitude = uniforms.uAmplitude
+			shader.uniforms.uWavelength = uniforms.uWavelength
+			shader.uniforms.uWaveSpeed = uniforms.uWaveSpeed
+			shader.uniforms.uOffset = fishWaveOffset
+			shader.uniforms.uTime = uniforms.uTime
+			shader.uniforms.uCausticsMap = uniforms.uCausticsMap
+			shader.uniforms.uCausticsScale = uniforms.uCausticsScale
+			
+			// Vertex shader: parameters
+			shader.vertexShader = shader.vertexShader.replace(
+				'varying vec3 vViewPosition;',
+				`
+				varying vec3 vViewPosition;
+				varying vec2 vUv;
+
+				uniform float uAmplitude;
+				uniform float uWavelength;
+				uniform float uOffset;
+				uniform float uWaveSpeed;
+				uniform float uTime;
+				`
+			)
+			// Vertex shader: sine wave animation
+			shader.vertexShader = shader.vertexShader.replace(
+				'#include <begin_vertex>',
+				`
+				#include <begin_vertex>
+				transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
+				vUv = uv;
+				`
+			)
+			// Vertex shader: save world position to UV
+			shader.vertexShader = shader.vertexShader.replace(
+				'#include <worldpos_vertex>',
+				`
+				#include <worldpos_vertex>
+				vUv = worldPosition.xz;
+				`
+			) 
+			// Fragment shader: parameters
+			shader.fragmentShader = shader.fragmentShader.replace(
+				'uniform vec3 diffuse;',
+				`
+				varying vec2 vUv;
+				uniform vec3 diffuse;
+				uniform sampler2D uCausticsMap;
+				uniform float uCausticsScale;
+				`
+			)
+			// Fragment shader: apply caustics
+			shader.fragmentShader = shader.fragmentShader.replace(
+				'vec4 diffuseColor = vec4( diffuse, opacity );',
+				`
+				vec4 diffuseColor = vec4( diffuse, opacity );
+				diffuseColor += texture2D( uCausticsMap, vUv * uCausticsScale );
+				`
+			) 
+
+			material.userData.shader = shader
 		}
 
 		return material
@@ -58,9 +123,18 @@ export default class Fish extends WorldObject
 
 	initMesh()
 	{
+		this.meshes = []
+
+		for (let i=0; i < boidCount; i++)
+		{
+			const mesh = new THREE.Mesh(this.geometry, this.material)	
+			mesh.castShadow = true
+			mesh.receiveShadow = true
+			this.meshes.push(mesh)
+		}
+
 		this.boidGroup = new BoidGroup(
-			this.geometry, this.material, this.uniforms,
-			boidCount, boidScale, boidSpawnRange
+			this.meshes, boidScale, boidSpawnRange
 		)
 	}
 
