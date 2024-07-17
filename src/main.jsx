@@ -30,11 +30,11 @@ scene.background = new THREE.Color( 0x02649a )
 // Lighting
 const dirLight = new THREE.DirectionalLight()
 dirLight.castShadow = true
-dirLight.intensity = 2.0
+dirLight.intensity = 1.5
 dirLight.position.y = 100
 scene.add(dirLight)
 const ambientLight = new THREE.AmbientLight()
-ambientLight.intensity = 0.9
+ambientLight.intensity = 0.8
 scene.add(ambientLight)
 
 // Loaders
