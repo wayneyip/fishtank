@@ -3,6 +3,7 @@ import Resources from './Resources'
 import sources from './Sources'
 import Skybox from './Skybox'
 import Godrays from './Godrays'
+import Surface from './Surface'
 import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
@@ -39,7 +40,7 @@ scene.add(ambientLight)
 
 // Loaders
 const resources = new Resources(sources)
-let skybox, fish, ground, particles, godrays
+let skybox, surface, fish, ground, particles, godrays
 
 resources.on('ready', () => {
 
@@ -47,6 +48,10 @@ resources.on('ready', () => {
 	skybox = new Skybox(resources)
 	scene.add(skybox.mesh)
 
+	// Surface
+	surface = new Surface(resources)
+	scene.add(surface.mesh)
+	
 	// Godrays
 	godrays = new Godrays(resources)
 	scene.add(godrays.mesh)
