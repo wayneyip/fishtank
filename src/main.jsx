@@ -32,7 +32,13 @@ scene.background = new THREE.Color( 0x02649a )
 const dirLight = new THREE.DirectionalLight()
 dirLight.castShadow = true
 dirLight.intensity = 1.5
-dirLight.position.y = 100
+dirLight.position.y = 0
+const lightTargetGeo = new THREE.PlaneGeometry(1,1)
+const lightTargetMat = new THREE.MeshBasicMaterial()
+const lightTargetMesh = new THREE.Mesh(lightTargetGeo, lightTargetMat)
+lightTargetMesh.position.y = 0
+dirLight.target = lightTargetMesh
+
 scene.add(dirLight)
 const ambientLight = new THREE.AmbientLight()
 ambientLight.intensity = 0.8
@@ -103,7 +109,7 @@ renderer.shadowMap.enabled = true
 renderer.setSize(size.width, size.height)
 
 // Controls
-// const controls = new OrbitControls( camera, renderer.domElement );
+const controls = new OrbitControls( camera, renderer.domElement );
 
 // Time
 const clock = new THREE.Clock()
