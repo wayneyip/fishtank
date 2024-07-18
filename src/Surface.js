@@ -26,11 +26,11 @@ export default class Surface extends WorldObject
 		normalMap.repeat.set(repeat, repeat)
 
 		const material = new THREE.MeshPhongMaterial({
-			color: 0xffffff,
+			color: 0xccccff,
 			specular: 0xffffff,
-			shininess: 5,
-			map: normalMap,
-		})
+			shininess: 30,
+			normalMap: normalMap
+		})	
 
 		return material
 	}
@@ -39,7 +39,7 @@ export default class Surface extends WorldObject
 	{
 		const mesh = new THREE.Mesh(this.geometry, this.material)
 		mesh.rotateX(0.5 * Math.PI)
-		mesh.position.y = 20
+		mesh.position.y = 30
 
 		return mesh
 	}
