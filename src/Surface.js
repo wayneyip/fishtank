@@ -19,19 +19,54 @@ export default class Surface extends WorldObject
 
 	initMaterial()
 	{
-		const repeat = 100
+		const repeat = 50
 		const normalMap = this.resources.items['ground_n']
 		normalMap.wrapS = THREE.RepeatWrapping
 		normalMap.wrapT = THREE.RepeatWrapping
 		normalMap.repeat.set(repeat, repeat)
 
 		const material = new THREE.MeshPhongMaterial({
-			color: 0xccccff,
-			specular: 0xffffff,
-			shininess: 30,
+			color: 0x9999dd,
+			specular: 0x9999dd,
+			shininess: 25,
 			normalMap: normalMap
-		})	
+		})
 
+		const surfaceUniforms = {
+			uTime : { value: 0.0 },
+			uSpeed: { value: 0.04 }
+		}	
+
+		material.onBeforeCompile = (shader) =>
+		{
+			shader.uniforms.uTime = surfaceUniforms.uTime
+			shader.uniforms.uSpeed = surfaceUniforms.uSpeed
+
+			shader.fragmentShader = shader.fragmentShader.replace(
+				'uniform vec3 diffuse;',
+				`
+				uniform vec3 diffuse;
+				uniform float uTime;
+				uniform float uSpeed;
+				`
+			)
+
+			shader.fragmentShader = shader.fragmentShader.replace(
+				'#include <normal_fragment_maps>',
+				`
+				vec3 mapN1 = texture2D( normalMap, vNormalMapUv + uTime * uSpeed ).xyz * 2.0 - 1.0;
+				mapN1.xy *= normalScale;
+				vec3 n1 = normalize( tbn * mapN1 );
+
+				vec3 mapN2 = texture2D( normalMap, vNormalMapUv - uTime * uSpeed ).xyz * 2.0 - 1.0;
+				mapN2.xy *= normalScale;
+				vec3 n2 = normalize( tbn * mapN2 );
+
+				normal = normalize(n1 + n2); 
+				`
+			)
+			material.userData.shader = shader
+		}
 		return material
 	}
 
@@ -39,8 +74,16 @@ export default class Surface extends WorldObject
 	{
 		const mesh = new THREE.Mesh(this.geometry, this.material)
 		mesh.rotateX(0.5 * Math.PI)
-		mesh.position.y = 30
+		mesh.position.y = 20
 
 		return mesh
+	}
+
+	update(elapsedTime)
+	{
+		if (this.material.userData.shader)
+		{
+			this.material.userData.shader.uniforms.uTime.value = elapsedTime
+		}
 	}
 }

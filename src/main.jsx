@@ -124,6 +124,8 @@ const tick = () => {
 
 	if (fish)
 		fish.update(elapsedTime)
+	if (surface)
+		surface.update(elapsedTime)
 	if (ground)
 		ground.update(elapsedTime)
 	if (particles)
