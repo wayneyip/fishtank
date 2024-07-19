@@ -41,7 +41,7 @@ scene.add(dirLightHelper)
 const lightTargetGeo = new THREE.PlaneGeometry(1,1)
 const lightTargetMat = new THREE.MeshBasicMaterial()
 const lightTargetMesh = new THREE.Mesh(lightTargetGeo, lightTargetMat)
-lightTargetMesh.position.y = 10
+lightTargetMesh.position.y = -10
 scene.add(lightTargetMesh)
 dirLight.target = lightTargetMesh
 

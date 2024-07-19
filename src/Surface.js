@@ -19,16 +19,16 @@ export default class Surface extends WorldObject
 
 	initMaterial()
 	{
-		const repeat = 10
+		const repeat = 20
 		const normalMap = this.resources.items['surface_n']
 		normalMap.wrapS = THREE.RepeatWrapping
 		normalMap.wrapT = THREE.RepeatWrapping
 		normalMap.repeat.set(repeat, repeat)
 
 		const material = new THREE.MeshPhongMaterial({
-			color: 0x9999dd,
-			specular: 0x9999dd,
-			shininess: 25,
+			color: 0x02649a,
+			specular: 0xddddff,
+			shininess: 5,
 			normalMap: normalMap
 		})
 
@@ -62,7 +62,7 @@ export default class Surface extends WorldObject
 				mapN2.xy *= normalScale;
 				vec3 n2 = normalize( tbn * mapN2 );
 
-				normal = normalize(n1 + n2); 
+				normal = - normalize(n1 + n2); 
 				`
 			)
 			material.userData.shader = shader
