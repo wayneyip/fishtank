@@ -19,8 +19,8 @@ export default class Surface extends WorldObject
 
 	initMaterial()
 	{
-		const repeat = 50
-		const normalMap = this.resources.items['ground_n']
+		const repeat = 10
+		const normalMap = this.resources.items['surface_n']
 		normalMap.wrapS = THREE.RepeatWrapping
 		normalMap.wrapT = THREE.RepeatWrapping
 		normalMap.repeat.set(repeat, repeat)
@@ -74,7 +74,7 @@ export default class Surface extends WorldObject
 	{
 		const mesh = new THREE.Mesh(this.geometry, this.material)
 		mesh.rotateX(0.5 * Math.PI)
-		mesh.position.y = 20
+		mesh.position.y = 30
 
 		return mesh
 	}
