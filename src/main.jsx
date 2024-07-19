@@ -15,6 +15,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // GUI
 const gui = new GUI()
+gui.hide()
 window.addEventListener('keydown', (event) =>
 {
 	if (event.key == 'd')
@@ -35,8 +36,8 @@ dirLight.intensity = 1.5
 dirLight.position.y = 0
 scene.add(dirLight)
 
-const dirLightHelper = new THREE.DirectionalLightHelper(dirLight)
-scene.add(dirLightHelper)
+// const dirLightHelper = new THREE.DirectionalLightHelper(dirLight)
+// scene.add(dirLightHelper)
 
 const lightTargetGeo = new THREE.PlaneGeometry(1,1)
 const lightTargetMat = new THREE.MeshBasicMaterial()
@@ -114,7 +115,7 @@ renderer.shadowMap.enabled = true
 renderer.setSize(size.width, size.height)
 
 // Controls
-const controls = new OrbitControls( camera, renderer.domElement );
+// const controls = new OrbitControls( camera, renderer.domElement );
 
 // Time
 const clock = new THREE.Clock()
