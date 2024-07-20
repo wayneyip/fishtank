@@ -12,7 +12,7 @@ export default [
 	{
 		name: 'fish_c',
 		type: 'texture',
-		path: 'fish/fish_c.png'
+		path: 'fish/fish_c.jpg'
 	},
 	{
 		name: 'ground_c',
