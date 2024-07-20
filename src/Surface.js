@@ -1,7 +1,12 @@
 import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
-const surfaceSize = 1000
+const surfaceSize 			= 1000
+const surfaceNormalsRepeat 	= 10
+const surfaceColor 			= 0xffffff
+const surfaceSpecular 		= 0xffffff
+const surfaceShininess 		= 50
+const surfaceScrollSpeed 	= 0.04
 
 export default class Surface extends WorldObject
 {
@@ -19,22 +24,21 @@ export default class Surface extends WorldObject
 
 	initMaterial()
 	{
-		const repeat = 10
 		const normalMap = this.resources.items['surface_n']
 		normalMap.wrapS = THREE.RepeatWrapping
 		normalMap.wrapT = THREE.RepeatWrapping
-		normalMap.repeat.set(repeat, repeat)
+		normalMap.repeat.set(surfaceNormalsRepeat, surfaceNormalsRepeat)
 
 		const material = new THREE.MeshPhongMaterial({
-			color: 0xffffff,
-			specular: 0xffffff,
-			shininess: 50,
+			color: surfaceColor,
+			specular: surfaceSpecular,
+			shininess: surfaceShininess,
 			normalMap: normalMap
 		})
 
 		const surfaceUniforms = {
 			uTime : { value: 0.0 },
-			uSpeed: { value: 0.04 }
+			uSpeed: { value: surfaceScrollSpeed }
 		}	
 
 		material.onBeforeCompile = (shader) =>
