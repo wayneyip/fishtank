@@ -5,7 +5,7 @@ import waterFragmentShader from './shaders/waterFragment.glsl'
 
 const skySize 			= 1000
 const skyTopColor 		= new THREE.Vector4(1, 1, 1, 1)
-const skyBottomColor 	= new THREE.Vector4(0.007, 0.392, 0.604, 1)
+const skyBottomColor 	= new THREE.Vector4(0.00, 0.530, 0.750, 1)
 
 
 export default class Skybox extends WorldObject
