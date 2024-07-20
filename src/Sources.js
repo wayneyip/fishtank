@@ -32,7 +32,7 @@ export default [
 	{
 		name: 'surface_n',
 		type: 'texture',
-		path: 'surface/surface_n.png'
+		path: 'surface/surface_n.jpeg'
 	},
 	{
 		name: 'particles_a',
