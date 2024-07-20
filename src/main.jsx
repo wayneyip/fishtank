@@ -3,6 +3,7 @@ import Resources from './Resources'
 import sources from './Sources'
 import Skybox from './Skybox'
 import Godrays from './Godrays'
+import Surface from './Surface'
 import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
@@ -14,6 +15,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // GUI
 const gui = new GUI()
+gui.hide()
 window.addEventListener('keydown', (event) =>
 {
 	if (event.key == 'd')
@@ -31,15 +33,26 @@ scene.background = new THREE.Color( 0x02649a )
 const dirLight = new THREE.DirectionalLight()
 dirLight.castShadow = true
 dirLight.intensity = 1.5
-dirLight.position.y = 100
+dirLight.position.y = 0
 scene.add(dirLight)
+
+// const dirLightHelper = new THREE.DirectionalLightHelper(dirLight)
+// scene.add(dirLightHelper)
+
+const lightTargetGeo = new THREE.PlaneGeometry(1,1)
+const lightTargetMat = new THREE.MeshBasicMaterial()
+const lightTargetMesh = new THREE.Mesh(lightTargetGeo, lightTargetMat)
+lightTargetMesh.position.y = -10
+scene.add(lightTargetMesh)
+dirLight.target = lightTargetMesh
+
 const ambientLight = new THREE.AmbientLight()
 ambientLight.intensity = 0.8
 scene.add(ambientLight)
 
 // Loaders
 const resources = new Resources(sources)
-let skybox, fish, ground, particles, godrays
+let skybox, surface, fish, ground, particles, godrays
 
 resources.on('ready', () => {
 
@@ -47,6 +60,10 @@ resources.on('ready', () => {
 	skybox = new Skybox(resources)
 	scene.add(skybox.mesh)
 
+	// Surface
+	surface = new Surface(resources)
+	scene.add(surface.mesh)
+	
 	// Godrays
 	godrays = new Godrays(resources)
 	scene.add(godrays.mesh)
@@ -108,6 +125,8 @@ const tick = () => {
 
 	if (fish)
 		fish.update(elapsedTime)
+	if (surface)
+		surface.update(elapsedTime)
 	if (ground)
 		ground.update(elapsedTime)
 	if (particles)

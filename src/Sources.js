@@ -30,6 +30,11 @@ export default [
 		path: 'ground/ground_caustics.png'
 	},
 	{
+		name: 'surface_n',
+		type: 'texture',
+		path: 'surface/surface_n.jpeg'
+	},
+	{
 		name: 'particles_a',
 		type: 'texture',
 		path: 'particles/particles_a.png'
