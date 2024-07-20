@@ -112,6 +112,7 @@ export default class Fish extends WorldObject
 				`
 				vec4 diffuseColor = vec4( diffuse, opacity );
 				diffuseColor += texture2D( uCausticsMap, vUv * uCausticsScale );
+				diffuseColor *= vec4(1.0, 1.0, 2.5, 1.0);
 				`
 			) 
 
