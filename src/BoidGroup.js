@@ -6,9 +6,9 @@ const cohesionFactor 		= 0.00004
 const alignmentFactor 		= 0.01
 const separationFactor 		= 0.01
 const separationDistance	= 0.8
-const boundsAvoidanceFactor = 0.001
-const boundsRange 			= 3
-const maxSpeed 				= 0.05
+const boundsAvoidanceFactor = 0.0005
+const boundsRange 			= 2.5
+const maxSpeed 				= 0.03
 
 export default class BoidGroup
 {
