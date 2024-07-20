@@ -25,9 +25,9 @@ export default [
 		path: 'ground/ground_n.png'
 	},
 	{
-		name: 'ground_caustics',
+		name: 'shared_caustics',
 		type: 'texture',
-		path: 'ground/ground_caustics.png'
+		path: 'shared_caustics.png'
 	},
 	{
 		name: 'surface_n',

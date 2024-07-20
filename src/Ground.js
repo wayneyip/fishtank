@@ -27,7 +27,7 @@ export default class Ground extends WorldObject
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
 
-		const groundCaustics = this.resources.items['ground_caustics']
+		const groundCaustics = this.resources.items['shared_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
 		groundCaustics.wrapT = THREE.RepeatWrapping
 
