@@ -2,10 +2,10 @@ import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
 const particlesCount 	= 1000
-const particlesBounds 	= 15
-const particleSize 		= 0.04
+const particlesBounds 	= 10
+const particleSize 		= 0.02
 const particleOpacity 	= 0.5
-const particleSpeed 	= 0.0003
+const particleSpeed 	= 0.001
 
 export default class Particles extends WorldObject
 {
@@ -44,6 +44,8 @@ export default class Particles extends WorldObject
 	initMesh()
 	{
 		const mesh = new THREE.Points(this.geometry, this.material)
+
+		mesh.position.z = 2
 
 		return mesh
 	}

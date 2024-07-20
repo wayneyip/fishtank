@@ -6,7 +6,7 @@ const surfaceNormalsRepeat 	= 10
 const surfaceColor 			= 0xffffff
 const surfaceSpecular 		= 0xffffff
 const surfaceShininess 		= 50
-const surfaceScrollSpeed 	= 0.04
+const surfaceScrollSpeed 	= 0.02
 
 export default class Surface extends WorldObject
 {

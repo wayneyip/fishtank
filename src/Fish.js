@@ -9,7 +9,7 @@ const fishWavelength 	= 0.08
 const fishWaveSpeed 	= 12.0
 const fishWaveOffset 	= 0.0
 const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
-const fishCausticsScale	= 0.4 
+const fishCausticsScale	= 0.5 
 
 const boidCount 		= 100
 const boidScale 		= 0.01
@@ -112,6 +112,7 @@ export default class Fish extends WorldObject
 				`
 				vec4 diffuseColor = vec4( diffuse, opacity );
 				diffuseColor += texture2D( uCausticsMap, vUv * uCausticsScale );
+				diffuseColor *= vec4(1.0, 1.0, 2.5, 1.0);
 				`
 			) 
 

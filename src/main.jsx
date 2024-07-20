@@ -26,8 +26,8 @@ window.addEventListener('keydown', (event) =>
 
 // Scene
 const scene = new THREE.Scene()
-scene.fog = new THREE.Fog( 0x02649a, 50, 150 )
-scene.background = new THREE.Color( 0x02649a )
+scene.fog = new THREE.Fog( 0x0087bf, 0, 150 )
+scene.background = new THREE.Color( 0x0087bf )
 
 // Lighting
 const dirLight = new THREE.DirectionalLight()
@@ -47,7 +47,7 @@ scene.add(lightTargetMesh)
 dirLight.target = lightTargetMesh
 
 const ambientLight = new THREE.AmbientLight()
-ambientLight.intensity = 0.8
+ambientLight.intensity = 1.0
 scene.add(ambientLight)
 
 // Loaders
@@ -101,8 +101,8 @@ window.addEventListener('resize', () =>
 })
 
 // Camera
-const camera = new THREE.PerspectiveCamera(45, size.width/size.height)
-camera.position.z = 10
+const camera = new THREE.PerspectiveCamera(55, size.width/size.height)
+camera.position.z = 5
 camera.rotateX( 0.05 * Math.PI )
 scene.add(camera)
 
