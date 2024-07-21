@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import WorldObject from './WorldObject'
 
 const groundSize 				= 300
-const groundTint 				= 0x9999cc
+const groundTint 				= 0xccccff
 const groundCausticsScrollSpeed = 0.04
 const groundCausticsTint		= new THREE.Vector4(0.5, 0.5, 0.6, 1.0)
 
@@ -22,6 +22,8 @@ export default class Ground extends WorldObject
 	{
 		// Textures
 		const groundDiffuse = this.resources.items['ground_c']
+		groundDiffuse.wrapS = THREE.RepeatWrapping
+		groundDiffuse.wrapT = THREE.RepeatWrapping
 
 		const groundNormal = this.resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
@@ -32,7 +34,7 @@ export default class Ground extends WorldObject
 		groundCaustics.wrapT = THREE.RepeatWrapping
 
 		// Material
-		const material = new THREE.MeshStandardMaterial({
+		const material = new THREE.MeshLambertMaterial({
 			color 		: groundTint,
 			map 		: groundDiffuse,
 			normalMap	: groundNormal

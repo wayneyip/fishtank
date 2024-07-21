@@ -5,7 +5,7 @@ import {randomNumber} from './Utils'
 const cohesionFactor 		= 0.00004
 const alignmentFactor 		= 0.01
 const separationFactor 		= 0.01
-const separationDistance	= 0.8
+const separationDistance	= 0.64
 const boundsAvoidanceFactor = 0.0005
 const boundsRange 			= 2.5
 const maxSpeed 				= 0.03
@@ -56,7 +56,7 @@ export default class BoidGroup
 					this.perceivedVelocity.add(otherboid.velocity)
 					
 					// Separation
-					if (boid.mesh.position.distanceTo(otherboid.mesh.position) < separationDistance)
+					if (boid.mesh.position.distanceToSquared(otherboid.mesh.position) < separationDistance)
 					{
 						this.vectorDiff.subVectors(otherboid.mesh.position, boid.mesh.position)
 						this.displacement.sub(this.vectorDiff)
