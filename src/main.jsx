@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Resources from './Resources'
 import sources from './Sources'
+import Lighting from './Lighting'
 import Skybox from './Skybox'
 import Godrays from './Godrays'
 import Surface from './Surface'
@@ -31,25 +32,10 @@ scene.fog = new THREE.Fog( 0x0087bf, 0, 150 )
 scene.background = new THREE.Color( 0x0087bf )
 
 // Lighting
-const dirLight = new THREE.DirectionalLight()
-dirLight.castShadow = true
-dirLight.intensity = 1.5
-dirLight.position.y = 0
-scene.add(dirLight)
-
-// const dirLightHelper = new THREE.DirectionalLightHelper(dirLight)
-// scene.add(dirLightHelper)
-
-const lightTargetGeo = new THREE.PlaneGeometry(1,1)
-const lightTargetMat = new THREE.MeshBasicMaterial()
-const lightTargetMesh = new THREE.Mesh(lightTargetGeo, lightTargetMat)
-lightTargetMesh.position.y = -10
-scene.add(lightTargetMesh)
-dirLight.target = lightTargetMesh
-
-const ambientLight = new THREE.AmbientLight()
-ambientLight.intensity = 1.0
-scene.add(ambientLight)
+const lighting = new Lighting()
+scene.add(lighting.directionalLight)
+scene.add(lighting.ambientLight)
+scene.add(lighting.lightTargetMesh)
 
 // Loaders
 const resources = new Resources(sources)
