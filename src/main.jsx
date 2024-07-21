@@ -13,6 +13,7 @@ import Stats from 'stats.js'
 import GUI from 'lil-gui'
 
 // Parameters
+const guiToggleKey = 'd'
 const fogColor = 0x0087bf
 const fogStart = 0 
 const fogEnd = 150
@@ -27,7 +28,7 @@ const gui = new GUI()
 gui.hide()
 window.addEventListener('keydown', (event) =>
 {
-	if (event.key == 'd')
+	if (event.key == guiToggleKey)
 	{
 		gui.show(gui._hidden)
 	}
