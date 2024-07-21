@@ -17,12 +17,12 @@ export default [
 	{
 		name: 'ground_c',
 		type: 'texture',
-		path: 'ground/ground_c.png'
+		path: 'ground/ground_c.jpg'
 	},
 	{
 		name: 'ground_n',
 		type: 'texture',
-		path: 'ground/ground_n.png'
+		path: 'ground/ground_n.jpg'
 	},
 	{
 		name: 'shared_caustics',
