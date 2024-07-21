@@ -8,6 +8,7 @@ import Fish from './Fish'
 import Ground from './Ground'
 import Particles from './Particles'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import Stats from 'stats.js'
 import GUI from 'lil-gui'
 
 // Canvas
@@ -117,9 +118,16 @@ renderer.setSize(size.width, size.height)
 // Controls
 // const controls = new OrbitControls( camera, renderer.domElement );
 
+// Stats
+const stats = new Stats()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
+
 // Time
 const clock = new THREE.Clock()
 const tick = () => {
+
+	stats.begin()
 
 	const elapsedTime = clock.getElapsedTime()
 
@@ -138,5 +146,7 @@ const tick = () => {
 	renderer.render(scene, camera)
 
 	window.requestAnimationFrame(tick)
+
+	stats.end()
 }
 tick()
