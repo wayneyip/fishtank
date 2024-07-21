@@ -33,7 +33,6 @@ window.addEventListener('keydown', (event) =>
 	}
 })
 
-
 // Scene + fog
 const scene = new THREE.Scene()
 scene.fog = new THREE.Fog( fogColor, fogStart, fogEnd )

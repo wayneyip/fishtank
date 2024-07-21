@@ -7,9 +7,6 @@ export default class Lighting
 		this.directionalLight = this.initDirectionalLight()
 		this.ambientLight = this.initAmbientLight()
 		this.lightTargetMesh = this.initLightTarget()
-
-
-		
 	}
 
 	initDirectionalLight()
