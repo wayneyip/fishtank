@@ -12,6 +12,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'stats.js'
 import GUI from 'lil-gui'
 
+// Parameters
+const fogColor = 0x0087bf
+const fogStart = 0 
+const fogEnd = 150
+const cameraFOV = 55
+const cameraZPos = 5
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -26,10 +33,11 @@ window.addEventListener('keydown', (event) =>
 	}
 })
 
-// Scene
+
+// Scene + fog
 const scene = new THREE.Scene()
-scene.fog = new THREE.Fog( 0x0087bf, 0, 150 )
-scene.background = new THREE.Color( 0x0087bf )
+scene.fog = new THREE.Fog( fogColor, fogStart, fogEnd )
+scene.background = new THREE.Color( fogColor )
 
 // Lighting
 const lighting = new Lighting()
@@ -88,8 +96,8 @@ window.addEventListener('resize', () =>
 })
 
 // Camera
-const camera = new THREE.PerspectiveCamera(55, size.width/size.height)
-camera.position.z = 5
+const camera = new THREE.PerspectiveCamera(cameraFOV, size.width/size.height)
+camera.position.z = cameraZPos
 camera.rotateX( 0.05 * Math.PI )
 scene.add(camera)
 
