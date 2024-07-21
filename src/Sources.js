@@ -12,22 +12,22 @@ export default [
 	{
 		name: 'fish_c',
 		type: 'texture',
-		path: 'fish/fish_c.png'
+		path: 'fish/fish_c.jpg'
 	},
 	{
 		name: 'ground_c',
 		type: 'texture',
-		path: 'ground/ground_c.png'
+		path: 'ground/ground_c.jpg'
 	},
 	{
 		name: 'ground_n',
 		type: 'texture',
-		path: 'ground/ground_n.png'
+		path: 'ground/ground_n.jpg'
 	},
 	{
-		name: 'ground_caustics',
+		name: 'shared_caustics',
 		type: 'texture',
-		path: 'ground/ground_caustics.png'
+		path: 'shared_caustics.jpg'
 	},
 	{
 		name: 'surface_n',

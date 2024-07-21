@@ -28,7 +28,7 @@ export default class Godrays extends WorldObject
 	initMaterial()
 	{
 		// Texture
-		const noise = this.resources.items['ground_caustics']
+		const noise = this.resources.items['shared_caustics']
 
 		const material = new THREE.ShaderMaterial({
 			vertexShader: godraysVertexShader,

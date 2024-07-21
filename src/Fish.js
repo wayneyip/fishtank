@@ -37,7 +37,7 @@ export default class Fish extends WorldObject
 	{
 		// Texture
 		const fishDiffuse = this.resources.items['fish_c']
-		const fishCaustics = this.resources.items['ground_caustics']
+		const fishCaustics = this.resources.items['shared_caustics']
 
 		// Material
 		const material = new THREE.MeshLambertMaterial({
