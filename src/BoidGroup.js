@@ -6,6 +6,7 @@ const cohesionFactor 		= 0.00004
 const alignmentFactor 		= 0.01
 const separationFactor 		= 0.01
 const separationDistance	= 0.64
+const mouseAvoidanceFactor 	= 0.01
 const boundsAvoidanceFactor = 0.0005
 const boundsRange 			= 2.5
 const maxSpeed 				= 0.03
@@ -84,7 +85,7 @@ export default class BoidGroup
 			if (isApproachingRay > 0.0)
 			{
 				const mouseRayToBoidVec = boidToMouseRayVec.negate()
-				const mouseAvoidanceVec = mouseRayToBoidVec.multiplyScalar(0.01)
+				const mouseAvoidanceVec = mouseRayToBoidVec.multiplyScalar(mouseAvoidanceFactor)
 				boid.velocity.add(mouseAvoidanceVec)
 			}
 
