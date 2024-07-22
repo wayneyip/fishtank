@@ -2,14 +2,15 @@ import * as THREE from 'three'
 import Boid from './Boid'
 import {randomNumber} from './Utils'
 
-const cohesionFactor 		= 0.00004
-const alignmentFactor 		= 0.01
-const separationFactor 		= 0.01
-const separationDistance	= 0.64
-const mouseAvoidanceFactor 	= 0.01
-const boundsAvoidanceFactor = 0.0005
-const boundsRange 			= 2.5
-const maxSpeed 				= 0.03
+const cohesionFactor 			= 0.00004
+const alignmentFactor 			= 0.01
+const separationFactor 			= 0.01
+const separationDistance		= 0.64
+const mouseAvoidanceDistance 	= 3.0
+const mouseAvoidanceFactor 		= 0.03
+const boundsAvoidanceFactor 	= 0.0005
+const boundsRange 				= 2.5
+const maxSpeed 					= 0.03
 
 export default class BoidGroup
 {
@@ -83,13 +84,18 @@ export default class BoidGroup
 			mouseRay.closestPointToPoint(boid.mesh.position, this.mouseRayClosestPoint)
 			const boidToMouseRayVec = this.mouseRayClosestPoint.sub(boid.mesh.position).normalize()
 			//
+			// Get distance from boid to mouse ray
+			const boidSqDistanceToMouseRay = mouseRay.distanceSqToPoint(boid.mesh.position)
+			//
 			// Get the boid's facing direction
 			this.boidDirection.copy(boid.velocity).normalize()
 			//
-			// If boid is approaching ray, steer away from it
-			const isApproachingRay = this.boidDirection.dot(boidToMouseRayVec)
-			if (isApproachingRay > 0)
+			// If boid is approaching mouse ray...
+			const isFacingRay = this.boidDirection.dot(boidToMouseRayVec) > 0
+			const isCloseToRay = boidSqDistanceToMouseRay < mouseAvoidanceDistance
+			if (isFacingRay && isCloseToRay)
 			{
+				// ...Steer away from mouse ray
 				const mouseRayToBoidVec = boidToMouseRayVec.negate()
 				const mouseAvoidanceVec = mouseRayToBoidVec.multiplyScalar(mouseAvoidanceFactor)
 				boid.velocity.add(mouseAvoidanceVec)
