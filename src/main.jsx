@@ -112,6 +112,21 @@ renderer.setSize(size.width, size.height)
 // Controls
 // const controls = new OrbitControls( camera, renderer.domElement );
 
+// Interactivity
+const mousePos = new THREE.Vector2()
+const raycaster = new THREE.Raycaster()
+
+window.addEventListener('mousedown', () => {
+
+})
+window.addEventListener('mouseup', () => {
+
+})
+window.addEventListener('mousemove', () => {
+	mousePos.x = (event.clientX / window.innerWidth) * 2 - 1
+	mousePos.y = -(event.clientY / window.innerHeight) * 2 + 1	
+})
+
 // Stats
 const stats = new Stats()
 stats.showPanel(0)
@@ -123,10 +138,15 @@ const tick = () => {
 
 	stats.begin()
 
+	// Raycasting
+	raycaster.setFromCamera(mousePos, camera)
+	const mouseRay = raycaster.ray 
+
+	// Animation
 	const elapsedTime = clock.getElapsedTime()
 
 	if (fish)
-		fish.update(elapsedTime)
+		fish.update(elapsedTime, mouseRay)
 	if (surface)
 		surface.update(elapsedTime)
 	if (ground)

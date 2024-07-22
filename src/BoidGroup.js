@@ -28,10 +28,12 @@ export default class BoidGroup
 		this.perceivedVelocity = new THREE.Vector3(0,0,0)
 		this.displacement = new THREE.Vector3(0,0,0)
 		this.vectorDiff = new THREE.Vector3(0,0,0)
+		this.mouseRayClosestPoint = new THREE.Vector3(0,0,0)
+		this.boidDirection = new THREE.Vector3()
 		this.boundsAvoidance = new THREE.Vector3(0,0,0)
 	}
 
-	simulate(elapsedTime)
+	simulate(elapsedTime, mouseRay)
 	{
 		for (let boid of this.boids)
 		{
@@ -73,6 +75,18 @@ export default class BoidGroup
 			const cohesionVec = this.perceivedCenter.sub(boid.mesh.position).multiplyScalar(cohesionFactor)
 			const alignmentVec = this.perceivedVelocity.sub(boid.velocity).multiplyScalar(alignmentFactor)
 			const separationVec = this.displacement.multiplyScalar(separationFactor)
+
+			// Mouse ray avoidance
+			mouseRay.closestPointToPoint(boid.mesh.position, this.mouseRayClosestPoint)
+			const boidToMouseRayVec = this.mouseRayClosestPoint.sub(boid.mesh.position).normalize()
+			this.boidDirection.copy(boid.velocity).normalize()
+			const isApproachingRay = this.boidDirection.dot(boidToMouseRayVec)
+			if (isApproachingRay > 0.0)
+			{
+				const mouseRayToBoidVec = boidToMouseRayVec.negate()
+				const mouseAvoidanceVec = mouseRayToBoidVec.multiplyScalar(0.01)
+				boid.velocity.add(mouseAvoidanceVec)
+			}
 
 			// Bounds avoidance 
 			if (boid.mesh.position.x < -boundsRange)
