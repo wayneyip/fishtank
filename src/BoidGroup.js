@@ -30,12 +30,12 @@ export default class BoidGroup
 		this.perceivedVelocity = new THREE.Vector3()
 		this.displacement = new THREE.Vector3()
 		this.vectorDiff = new THREE.Vector3()
-		this.mouseRayClosestPoint = new THREE.Vector3()
+		this.closestPointToRay = new THREE.Vector3()
 		this.boidDirection = new THREE.Vector3()
 		this.boundsAvoidance = new THREE.Vector3()
 	}
 
-	simulate(elapsedTime, mouseRay)
+	simulate(elapsedTime, rayToAvoid)
 	{
 		for (let boid of this.boids)
 		{
@@ -80,26 +80,26 @@ export default class BoidGroup
 
 			// ***** Mouse ray avoidance *****
 			//
-			if (mouseRay)
+			if (rayToAvoid)
 			{
 				// Get the vector from boid to mouse ray
-				mouseRay.closestPointToPoint(boid.mesh.position, this.mouseRayClosestPoint)
-				const boidToMouseRayVec = this.mouseRayClosestPoint.sub(boid.mesh.position).normalize()
+				rayToAvoid.closestPointToPoint(boid.mesh.position, this.closestPointToRay)
+				const boidToRayVec = this.closestPointToRay.sub(boid.mesh.position).normalize()
 				//
 				// Get distance from boid to mouse ray
-				const boidSqDistanceToMouseRay = mouseRay.distanceSqToPoint(boid.mesh.position)
+				const boidSqDistanceToRay = rayToAvoid.distanceSqToPoint(boid.mesh.position)
 				//
 				// Get the boid's facing direction
 				this.boidDirection.copy(boid.velocity).normalize()
 				//
 				// If boid is approaching mouse ray...
-				const isFacingRay = this.boidDirection.dot(boidToMouseRayVec) > 0
-				const isCloseToRay = boidSqDistanceToMouseRay < mouseAvoidanceDistance
+				const isFacingRay = this.boidDirection.dot(boidToRayVec) > 0
+				const isCloseToRay = boidSqDistanceToRay < mouseAvoidanceDistance
 				if (isFacingRay && isCloseToRay)
 				{
 					// ...Steer away from mouse ray
-					const mouseRayToBoidVec = boidToMouseRayVec.negate()
-					const mouseAvoidanceVec = mouseRayToBoidVec.multiplyScalar(mouseAvoidanceFactor)
+					const rayToBoidVec = boidToRayVec.negate()
+					const mouseAvoidanceVec = rayToBoidVec.multiplyScalar(mouseAvoidanceFactor)
 					boid.velocity.add(mouseAvoidanceVec)
 				}
 			}

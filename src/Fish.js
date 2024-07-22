@@ -139,8 +139,8 @@ export default class Fish extends WorldObject
 		)
 	}
 
-	update(elapsedTime, mouseRay)
+	update(elapsedTime, rayToAvoid)
 	{
-		this.boidGroup.simulate(elapsedTime, mouseRay)
+		this.boidGroup.simulate(elapsedTime, rayToAvoid)
 	}
 }

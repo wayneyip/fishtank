@@ -113,10 +113,10 @@ renderer.setSize(size.width, size.height)
 // const controls = new OrbitControls( camera, renderer.domElement );
 
 // Interactivity
-const mousePos = new THREE.Vector2()
 const raycaster = new THREE.Raycaster()
+const pointerPos = new THREE.Vector2()
 let isPointerDown = false
-let mouseRay = null
+let pointerRay = null
 
 window.addEventListener('pointerdown', () => {
 	isPointerDown = true
@@ -124,16 +124,16 @@ window.addEventListener('pointerdown', () => {
 window.addEventListener('pointerup', () => {
 	isPointerDown = false
 
-	// Reset mouseRay so boids can pass through last touched point
-	mouseRay = null
+	// Reset ray so boids can pass through last touched point
+	pointerRay = null
 })
 window.addEventListener('pointermove', () => {
-	mousePos.x = (event.clientX / window.innerWidth) * 2 - 1
-	mousePos.y = -(event.clientY / window.innerHeight) * 2 + 1	
+	pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
+	pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
 })
 window.addEventListener('mousemove', () => {
-	mousePos.x = (event.clientX / window.innerWidth) * 2 - 1
-	mousePos.y = -(event.clientY / window.innerHeight) * 2 + 1	
+	pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
+	pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
 })
 
 // Stats
@@ -150,15 +150,15 @@ const tick = () => {
 	// Raycasting
 	if (isPointerDown)
 	{
-		raycaster.setFromCamera(mousePos, camera)
-		mouseRay = raycaster.ray 
+		raycaster.setFromCamera(pointerPos, camera)
+		pointerRay = raycaster.ray 
 	}
 
 	// Animation
 	const elapsedTime = clock.getElapsedTime()
 
 	if (fish)
-		fish.update(elapsedTime, mouseRay)
+		fish.update(elapsedTime, pointerRay)
 	if (surface)
 		surface.update(elapsedTime)
 	if (ground)
