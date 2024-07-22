@@ -2,13 +2,15 @@ import * as THREE from 'three'
 import Boid from './Boid'
 import {randomNumber} from './Utils'
 
-const cohesionFactor 		= 0.00004
-const alignmentFactor 		= 0.01
-const separationFactor 		= 0.01
-const separationDistance	= 0.64
-const boundsAvoidanceFactor = 0.0005
-const boundsRange 			= 2.5
-const maxSpeed 				= 0.03
+const cohesionFactor 			= 0.00001
+const alignmentFactor 			= 0.01
+const separationFactor 			= 0.01
+const separationDistance		= 0.64
+const mouseAvoidanceDistance 	= 3.0
+const mouseAvoidanceFactor 		= 0.03
+const boundsAvoidanceFactor 	= 0.0005
+const boundsRange 				= 2.5
+const maxSpeed 					= 0.03
 
 export default class BoidGroup
 {
@@ -24,14 +26,16 @@ export default class BoidGroup
 		
 		// Cached values 
 		// (for avoiding repeated creation in simulate())
-		this.perceivedCenter = new THREE.Vector3(0,0,0)
-		this.perceivedVelocity = new THREE.Vector3(0,0,0)
-		this.displacement = new THREE.Vector3(0,0,0)
-		this.vectorDiff = new THREE.Vector3(0,0,0)
-		this.boundsAvoidance = new THREE.Vector3(0,0,0)
+		this.perceivedCenter = new THREE.Vector3()
+		this.perceivedVelocity = new THREE.Vector3()
+		this.displacement = new THREE.Vector3()
+		this.vectorDiff = new THREE.Vector3()
+		this.closestPointToRay = new THREE.Vector3()
+		this.boidDirection = new THREE.Vector3()
+		this.boundsAvoidance = new THREE.Vector3()
 	}
 
-	simulate(elapsedTime)
+	simulate(elapsedTime, rayToAvoid)
 	{
 		for (let boid of this.boids)
 		{
@@ -74,6 +78,32 @@ export default class BoidGroup
 			const alignmentVec = this.perceivedVelocity.sub(boid.velocity).multiplyScalar(alignmentFactor)
 			const separationVec = this.displacement.multiplyScalar(separationFactor)
 
+			// ***** Mouse ray avoidance *****
+			//
+			if (rayToAvoid)
+			{
+				// Get the vector from boid to mouse ray
+				rayToAvoid.closestPointToPoint(boid.mesh.position, this.closestPointToRay)
+				const boidToRayVec = this.closestPointToRay.sub(boid.mesh.position).normalize()
+				//
+				// Get distance from boid to mouse ray
+				const boidSqDistanceToRay = rayToAvoid.distanceSqToPoint(boid.mesh.position)
+				//
+				// Get the boid's facing direction
+				this.boidDirection.copy(boid.velocity).normalize()
+				//
+				// If boid is approaching mouse ray...
+				const isFacingRay = this.boidDirection.dot(boidToRayVec) > 0
+				const isCloseToRay = boidSqDistanceToRay < mouseAvoidanceDistance
+				if (isFacingRay && isCloseToRay)
+				{
+					// ...Steer away from mouse ray
+					const rayToBoidVec = boidToRayVec.negate()
+					const mouseAvoidanceVec = rayToBoidVec.multiplyScalar(mouseAvoidanceFactor)
+					boid.velocity.add(mouseAvoidanceVec)
+				}
+			}
+			
 			// Bounds avoidance 
 			if (boid.mesh.position.x < -boundsRange)
 			{

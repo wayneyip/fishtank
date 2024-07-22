@@ -112,6 +112,30 @@ renderer.setSize(size.width, size.height)
 // Controls
 // const controls = new OrbitControls( camera, renderer.domElement );
 
+// Interactivity
+const raycaster = new THREE.Raycaster()
+const pointerPos = new THREE.Vector2()
+let isPointerDown = false
+let pointerRay = null
+
+window.addEventListener('pointerdown', () => {
+	isPointerDown = true
+})
+window.addEventListener('pointerup', () => {
+	isPointerDown = false
+
+	// Reset ray so boids can pass through last touched point
+	pointerRay = null
+})
+window.addEventListener('pointermove', () => {
+	pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
+	pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
+})
+window.addEventListener('mousemove', () => {
+	pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
+	pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
+})
+
 // Stats
 const stats = new Stats()
 stats.showPanel(0)
@@ -123,10 +147,18 @@ const tick = () => {
 
 	stats.begin()
 
+	// Raycasting
+	if (isPointerDown)
+	{
+		raycaster.setFromCamera(pointerPos, camera)
+		pointerRay = raycaster.ray 
+	}
+
+	// Animation
 	const elapsedTime = clock.getElapsedTime()
 
 	if (fish)
-		fish.update(elapsedTime)
+		fish.update(elapsedTime, pointerRay)
 	if (surface)
 		surface.update(elapsedTime)
 	if (ground)
