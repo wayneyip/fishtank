@@ -1,5 +1,4 @@
-* 
-{
+* {
 	margin:  0;
 	padding: 0;
 }
@@ -13,9 +12,19 @@ body {
   overflow: hidden;
 }
 
-.webgl
-{
+.webgl {
 	position: fixed;
 	top: 0;
 	left: 0;
+}
+
+#instruction {
+	position: absolute;
+	top: 15px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display: block;
+	color: #f0ffff;
+	font-family: "Verdana", sans-serif;
 }
