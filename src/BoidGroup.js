@@ -26,13 +26,13 @@ export default class BoidGroup
 		
 		// Cached values 
 		// (for avoiding repeated creation in simulate())
-		this.perceivedCenter = new THREE.Vector3(0,0,0)
-		this.perceivedVelocity = new THREE.Vector3(0,0,0)
-		this.displacement = new THREE.Vector3(0,0,0)
-		this.vectorDiff = new THREE.Vector3(0,0,0)
-		this.mouseRayClosestPoint = new THREE.Vector3(0,0,0)
+		this.perceivedCenter = new THREE.Vector3()
+		this.perceivedVelocity = new THREE.Vector3()
+		this.displacement = new THREE.Vector3()
+		this.vectorDiff = new THREE.Vector3()
+		this.mouseRayClosestPoint = new THREE.Vector3()
 		this.boidDirection = new THREE.Vector3()
-		this.boundsAvoidance = new THREE.Vector3(0,0,0)
+		this.boundsAvoidance = new THREE.Vector3()
 	}
 
 	simulate(elapsedTime, mouseRay)
