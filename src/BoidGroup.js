@@ -77,12 +77,18 @@ export default class BoidGroup
 			const alignmentVec = this.perceivedVelocity.sub(boid.velocity).multiplyScalar(alignmentFactor)
 			const separationVec = this.displacement.multiplyScalar(separationFactor)
 
-			// Mouse ray avoidance
+			// ***** Mouse ray avoidance *****
+			//
+			// Get the vector from boid to mouse ray
 			mouseRay.closestPointToPoint(boid.mesh.position, this.mouseRayClosestPoint)
 			const boidToMouseRayVec = this.mouseRayClosestPoint.sub(boid.mesh.position).normalize()
+			//
+			// Get the boid's facing direction
 			this.boidDirection.copy(boid.velocity).normalize()
+			//
+			// If boid is approaching ray, steer away from it
 			const isApproachingRay = this.boidDirection.dot(boidToMouseRayVec)
-			if (isApproachingRay > 0.0)
+			if (isApproachingRay > 0)
 			{
 				const mouseRayToBoidVec = boidToMouseRayVec.negate()
 				const mouseAvoidanceVec = mouseRayToBoidVec.multiplyScalar(mouseAvoidanceFactor)
