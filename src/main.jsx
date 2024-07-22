@@ -115,12 +115,21 @@ renderer.setSize(size.width, size.height)
 // Interactivity
 const mousePos = new THREE.Vector2()
 const raycaster = new THREE.Raycaster()
+let isPointerDown = false
+let mouseRay = null
 
-window.addEventListener('mousedown', () => {
-
+window.addEventListener('pointerdown', () => {
+	isPointerDown = true
 })
-window.addEventListener('mouseup', () => {
+window.addEventListener('pointerup', () => {
+	isPointerDown = false
 
+	// Reset mouseRay so boids can pass through last touched point
+	mouseRay = null
+})
+window.addEventListener('pointermove', () => {
+	mousePos.x = (event.clientX / window.innerWidth) * 2 - 1
+	mousePos.y = -(event.clientY / window.innerHeight) * 2 + 1	
 })
 window.addEventListener('mousemove', () => {
 	mousePos.x = (event.clientX / window.innerWidth) * 2 - 1
@@ -139,8 +148,11 @@ const tick = () => {
 	stats.begin()
 
 	// Raycasting
-	raycaster.setFromCamera(mousePos, camera)
-	const mouseRay = raycaster.ray 
+	if (isPointerDown)
+	{
+		raycaster.setFromCamera(mousePos, camera)
+		mouseRay = raycaster.ray 
+	}
 
 	// Animation
 	const elapsedTime = clock.getElapsedTime()
