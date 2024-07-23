@@ -1,5 +1,5 @@
 # Fish Simulation
-![screenshot](https://raw.githubusercontent.com/wayneyip/fishtank/main/docs/wayne_ocean_v1.png)
+![screenshot](https://raw.githubusercontent.com/wayneyip/fishtank/dev/docs/wayne_ocean_v1.png)
 
 A web-based interactive fish simulation built with Three.js and custom HLSL shaders. 
 
