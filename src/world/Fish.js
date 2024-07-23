@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import WorldObject from './WorldObject'
 import BoidGroup from './BoidGroup'
-import fishVertexShader from './shaders/fishVertex.glsl'
-import fishFragmentShader from './shaders/fishFragment.glsl'
+import fishVertexShader from '/shaders/fishVertex.glsl'
+import fishFragmentShader from '/shaders/fishFragment.glsl'
 
 const fishWaveAmplitude = 5.0
 const fishWavelength 	= 0.08
