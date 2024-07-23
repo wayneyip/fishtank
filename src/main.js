@@ -132,10 +132,6 @@ window.addEventListener('pointermove', () => {
 	pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
 	pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
 })
-window.addEventListener('mousemove', () => {
-	pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
-	pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
-})
 
 // Stats
 const stats = new Stats()
