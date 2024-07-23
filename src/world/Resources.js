@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js'
-import EventEmitter from './EventEmitter'
+import EventEmitter from '/utils/EventEmitter'
 
 export default class Resources extends EventEmitter
 {
@@ -67,13 +67,10 @@ export default class Resources extends EventEmitter
 	{
 		this.items[source.name] = file
 		
-		console.log("Loaded: " + source.name)
-
 		this.loaded++
 
 		if (this.isFinishedLoading())
 		{
-			console.log("Ready: all resources loaded!")
 			this.trigger('ready')
 		}
 	}

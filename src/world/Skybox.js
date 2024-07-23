@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
-import waterVertexShader from './shaders/waterVertex.glsl'
-import waterFragmentShader from './shaders/waterFragment.glsl'
+import WorldObject from '/utils/WorldObject'
+import waterVertexShader from '/shaders/waterVertex.glsl'
+import waterFragmentShader from '/shaders/waterFragment.glsl'
 
 const skySize 			= 1000
 const skyTopColor 		= new THREE.Vector4(1, 1, 1, 1)

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
-import godraysVertexShader from './shaders/godraysVertex.glsl'
-import godraysFragmentShader from './shaders/godraysFragment.glsl'
+import WorldObject from '/utils/WorldObject'
+import godraysVertexShader from '/shaders/godraysVertex.glsl'
+import godraysFragmentShader from '/shaders/godraysFragment.glsl'
 
 const godrayTint 		= new THREE.Vector4(0.9, 0.9, 1.0, 1.0)
 const godrayRadialScale = -0.02

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
+import WorldObject from '/utils/WorldObject'
 
 const groundSize 				= 300
 const groundTint 				= 0xccccff

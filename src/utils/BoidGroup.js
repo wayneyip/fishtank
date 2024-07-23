@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import Boid from './Boid'
-import {randomNumber} from './Utils'
+import {randomNumber} from './MathUtils'
 
 const cohesionFactor 			= 0.00001
 const alignmentFactor 			= 0.01

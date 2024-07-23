@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import {randomNumber} from './Utils'
+import {randomNumber} from './MathUtils'
 
 const initialMaxSpeed = 0.01
 
