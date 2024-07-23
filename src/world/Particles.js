@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
+import WorldObject from '/utils/WorldObject'
 
 const particlesCount 	= 1000
 const particlesBounds 	= 10

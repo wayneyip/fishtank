@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
+import WorldObject from '/utils/WorldObject'
 
 const surfaceSize 			= 1000
 const surfaceNormalsRepeat 	= 10

@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
-import BoidGroup from './BoidGroup'
+import WorldObject from '/utils/WorldObject'
+import BoidGroup from '/utils/BoidGroup'
 import fishVertexShader from '/shaders/fishVertex.glsl'
 import fishFragmentShader from '/shaders/fishFragment.glsl'
 

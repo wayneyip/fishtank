@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
+import WorldObject from '/utils/WorldObject'
 import waterVertexShader from '/shaders/waterVertex.glsl'
 import waterFragmentShader from '/shaders/waterFragment.glsl'
 

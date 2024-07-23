@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import WorldObject from './WorldObject'
+import WorldObject from '/utils/WorldObject'
 import godraysVertexShader from '/shaders/godraysVertex.glsl'
 import godraysFragmentShader from '/shaders/godraysFragment.glsl'
 
