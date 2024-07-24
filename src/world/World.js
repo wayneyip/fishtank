@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Resources from '/world/Resources'
 import sources from '/world/Sources'
 import Lighting from '/world/Lighting'
+import WorldObject from '/utils/WorldObject'
 import Skybox from '/world/Skybox'
 import Godrays from '/world/Godrays'
 import Surface from '/world/Surface'
@@ -37,8 +38,10 @@ export default class World
 		this.worldObjects 	= this.initWorldObjects()
 		this.camera 		= this.initCamera()
 		this.renderer  		= this.initRenderer()
-		this.controls 		= new OrbitControls(this.camera, this.renderer.domElement)
 		this.addResizeEvent()
+
+		// Controls
+		// this.controls 	= new OrbitControls(this.camera, this.renderer.domElement)
 
 		// Interactivity
 		this.raycaster 		= new THREE.Raycaster()
@@ -121,6 +124,7 @@ export default class World
 			{
 				this.scene.add(f.mesh)
 			}
+			worldObjects.push(fish)
 
 			// Ground
 			ground = new Ground(this.resources)
@@ -213,13 +217,15 @@ export default class World
 
 			for (let worldObject of this.worldObjects)
 			{
-				if (worldObject)
+				if (worldObject instanceof Fish)
+				{
+					worldObject.update(elapsedTime, this.pointerRay)
+				}
+				else if (worldObject instanceof WorldObject)
 				{
 					worldObject.update(elapsedTime)
 				}
 			}
-			// if (fish)
-			// 	fish.update(elapsedTime, this.pointerRay)
 
 			// Render
 			this.renderer.render(this.scene, this.camera)
