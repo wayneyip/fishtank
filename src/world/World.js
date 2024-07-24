@@ -230,11 +230,7 @@ export default class World
 
 			for (let worldObject of this.worldObjects)
 			{
-				if (worldObject instanceof Fish)
-				{
-					worldObject.update(elapsedTime, this.pointerRay)
-				}
-				else if (worldObject instanceof WorldObject)
+				if (worldObject instanceof WorldObject)
 				{
 					worldObject.update(elapsedTime)
 				}
