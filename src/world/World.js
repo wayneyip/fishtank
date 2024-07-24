@@ -48,7 +48,7 @@ export default class World
 		this.addPointerEvents()
 
 		// Time
-		this.startTime()
+		this.clock 			= this.initClock()
 	}
 
 	initGui()
@@ -193,7 +193,7 @@ export default class World
 		})
 	}
 
-	startTime()
+	initClock()
 	{
 		// Time
 		const clock = new THREE.Clock()
@@ -220,14 +220,6 @@ export default class World
 			}
 			// if (fish)
 			// 	fish.update(elapsedTime, this.pointerRay)
-			// if (surface)
-			// 	surface.update(elapsedTime)
-			// if (ground)
-			// 	ground.update(elapsedTime)
-			// if (particles)
-			// 	particles.update(elapsedTime)
-			// if (godrays)
-			// 	godrays.update(elapsedTime)
 
 			// Render
 			this.renderer.render(this.scene, this.camera)
@@ -237,5 +229,7 @@ export default class World
 			this.stats.end()
 		}
 		tick()
+
+		return clock
 	}
 }
