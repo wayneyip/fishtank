@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import World from '/world/World'
 import Resources from '/world/Resources'
 import sources from '/world/Sources'
 import Lighting from '/world/Lighting'
@@ -10,7 +11,6 @@ import Ground from '/world/Ground'
 import Particles from '/world/Particles'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'stats.js'
-import GUI from 'lil-gui'
 
 // Parameters
 const guiToggleKey = 'd'
@@ -24,15 +24,7 @@ const cameraZPos = 5
 const canvas = document.querySelector('canvas.webgl')
 
 // GUI
-const gui = new GUI()
-gui.hide()
-window.addEventListener('keydown', (event) =>
-{
-	if (event.key == guiToggleKey)
-	{
-		gui.show(gui._hidden)
-	}
-})
+const world = new World()
 
 // Scene + fog
 const scene = new THREE.Scene()
