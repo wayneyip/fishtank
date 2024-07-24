@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import Resources from '/world/Resources'
 import sources from '/world/Sources'
 import Lighting from '/world/Lighting'
@@ -8,6 +9,8 @@ import Fish from '/world/Fish'
 import Ground from '/world/Ground'
 import Particles from '/world/Particles'
 import GUI from 'lil-gui'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import Stats from 'stats.js'
 
 // Parameters
 const guiToggleKey = 'd'
@@ -19,11 +22,33 @@ const cameraZPos = 5
 
 export default class World 
 {
-	constructor()
+	constructor(canvas, screenSize)
 	{
-		this.gui = this.initGui()
-		// this.scene = initScene()
-		// this.lighting = initLighting()
+		// UI
+		this.canvas 		= canvas
+		this.screenSize 	= screenSize
+		this.gui 			= this.initGui()
+		this.stats 			= this.initStats()
+		
+		// Scene 
+		this.scene 			= this.initScene()
+		this.lighting 		= this.initLighting()
+		this.resources 		= new Resources(sources)
+		this.worldObjects 	= this.initWorldObjects()
+		this.camera 		= this.initCamera()
+		this.renderer  		= this.initRenderer()
+		this.controls 		= new OrbitControls(this.camera, this.renderer.domElement)
+		this.addResizeEvent()
+
+		// Interactivity
+		this.raycaster 		= new THREE.Raycaster()
+		this.pointerPos 	= new THREE.Vector2()
+		this.isPointerDown 	= false
+		this.pointerRay 	= null
+		this.addPointerEvents()
+
+		// Time
+		this.startTime()
 	}
 
 	initGui()
@@ -40,18 +65,162 @@ export default class World
 		return gui
 	}
 
+	initStats()
+	{
+		const stats = new Stats()
+		stats.showPanel(0)
+		document.body.appendChild(stats.dom)
+
+		return stats
+	}
+
 	initScene()
 	{
 		const scene = new THREE.Scene()
 		scene.fog = new THREE.Fog( fogColor, fogStart, fogEnd )
 		scene.background = new THREE.Color( fogColor )
+
+		return scene
 	}
 
 	initLighting()
 	{
 		const lighting = new Lighting()
-		scene.add(lighting.directionalLight)
-		scene.add(lighting.ambientLight)
-		scene.add(lighting.lightTargetMesh)
+		this.scene.add(lighting.directionalLight)
+		this.scene.add(lighting.ambientLight)
+		this.scene.add(lighting.lightTargetMesh)
+
+		return lighting
+	}
+
+	initWorldObjects()
+	{
+		let skybox, surface, fish, ground, particles, godrays
+
+		this.resources.on('ready', () => {
+
+			// Skybox
+			skybox = new Skybox(this.resources)
+			this.scene.add(skybox.mesh)
+
+			// Surface
+			surface = new Surface(this.resources)
+			this.scene.add(surface.mesh)
+			
+			// Godrays
+			godrays = new Godrays(this.resources)
+			this.scene.add(godrays.mesh)
+
+			// Fish 
+			fish = new Fish(this.resources)
+			for (const f of fish.boidGroup.boids)
+			{
+				this.scene.add(f.mesh)
+			}
+
+			// Ground
+			ground = new Ground(this.resources)
+			this.scene.add(ground.mesh)
+
+			// Particles
+			particles = new Particles(this.resources)
+			this.scene.add(particles.mesh)
+		})
+	}
+
+	initCamera()
+	{
+		const camera = new THREE.PerspectiveCamera(
+			cameraFOV, 
+			this.screenSize.width / this.screenSize.height
+		)
+		camera.position.z = cameraZPos
+		camera.rotateX( 0.05 * Math.PI )
+		this.scene.add(camera)
+
+		return camera
+	}
+
+	initRenderer()
+	{
+		const renderer = new THREE.WebGLRenderer({
+			canvas: this.canvas,
+			antialias: true
+		})
+		renderer.shadowMap.enabled = true
+		renderer.setSize(this.screenSize.width, this.screenSize.height)
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+		return renderer
+	}
+
+	addResizeEvent()
+	{
+		window.addEventListener('resize', () =>
+		{
+			this.screenSize.width = window.innerWidth
+			this.screenSize.height = window.innerHeight
+
+			camera.aspect = this.screenSize.width / this.screenSize.height
+			camera.updateProjectionMatrix()
+
+			renderer.setSize(this.screenSize.width, this.screenSize.height)
+		})
+	}
+
+	addPointerEvents()
+	{
+		window.addEventListener('pointerdown', () => {
+			this.isPointerDown = true
+		})
+		window.addEventListener('pointerup', () => {
+			this.isPointerDown = false
+
+			// Reset ray, so boids can pass through last touched point
+			this.pointerRay = null
+		})
+		window.addEventListener('pointermove', () => {
+			this.pointerPos.x = (event.clientX / window.innerWidth) * 2 - 1
+			this.pointerPos.y = -(event.clientY / window.innerHeight) * 2 + 1	
+		})
+	}
+
+	startTime()
+	{
+		// Time
+		const clock = new THREE.Clock()
+		const tick = () => {
+
+			this.stats.begin()
+
+			// Raycasting
+			if (this.isPointerDown)
+			{
+				this.raycaster.setFromCamera(this.pointerPos, this.camera)
+				this.pointerRay = this.raycaster.ray 
+			}
+
+			// Animation
+			const elapsedTime = clock.getElapsedTime()
+
+			// if (fish)
+			// 	fish.update(elapsedTime, this.pointerRay)
+			// if (surface)
+			// 	surface.update(elapsedTime)
+			// if (ground)
+			// 	ground.update(elapsedTime)
+			// if (particles)
+			// 	particles.update(elapsedTime)
+			// if (godrays)
+			// 	godrays.update(elapsedTime)
+
+			// Render
+			this.renderer.render(this.scene, this.camera)
+
+			window.requestAnimationFrame(tick)
+
+			this.stats.end()
+		}
+		tick()
 	}
 }
