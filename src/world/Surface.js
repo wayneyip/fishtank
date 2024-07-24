@@ -10,9 +10,9 @@ const surfaceScrollSpeed 	= 0.02
 
 export default class Surface extends WorldObject
 {
-	constructor(resources)
+	constructor()
 	{
-		super(resources)
+		super()
 	}
 
 	initGeometry()
@@ -24,7 +24,7 @@ export default class Surface extends WorldObject
 
 	initMaterial()
 	{
-		const normalMap = this.resources.items['surface_n']
+		const normalMap = this.world.resources.items['surface_n']
 		normalMap.wrapS = THREE.RepeatWrapping
 		normalMap.wrapT = THREE.RepeatWrapping
 		normalMap.repeat.set(surfaceNormalsRepeat, surfaceNormalsRepeat)
