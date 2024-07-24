@@ -25,20 +25,24 @@ export default class World
 {
 	constructor(canvas, screenSize)
 	{
-		// UI
-		this.canvas 		= canvas
-		this.screenSize 	= screenSize
-		this.gui 			= this.initGui()
-		this.stats 			= this.initStats()
-		
-		// Scene 
+		// Scene and lighting 
 		this.scene 			= this.initScene()
 		this.lighting 		= this.initLighting()
-		this.resources 		= new Resources(sources)
-		this.worldObjects 	= this.initWorldObjects()
+		
+		// Camera and renderer
+		this.canvas 		= canvas
+		this.screenSize 	= screenSize
 		this.camera 		= this.initCamera()
 		this.renderer  		= this.initRenderer()
 		this.addResizeEvent()
+
+		// UI
+		this.gui 			= this.initGui()
+		this.stats 			= this.initStats()
+
+		// Objects
+		this.resources 		= new Resources(sources)
+		this.worldObjects 	= this.initWorldObjects()
 
 		// Controls
 		// this.controls 	= new OrbitControls(this.camera, this.renderer.domElement)
@@ -80,8 +84,8 @@ export default class World
 	initScene()
 	{
 		const scene = new THREE.Scene()
-		scene.fog = new THREE.Fog( fogColor, fogStart, fogEnd )
-		scene.background = new THREE.Color( fogColor )
+		scene.fog = new THREE.Fog(fogColor, fogStart, fogEnd)
+		scene.background = new THREE.Color(fogColor)
 
 		return scene
 	}
@@ -147,7 +151,7 @@ export default class World
 			this.screenSize.width / this.screenSize.height
 		)
 		camera.position.z = cameraZPos
-		camera.rotateX( 0.05 * Math.PI )
+		camera.rotateX(0.05 * Math.PI)
 		this.scene.add(camera)
 
 		return camera
