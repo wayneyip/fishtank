@@ -1,7 +1,7 @@
 # Fish Simulation
 ![screenshot](https://raw.githubusercontent.com/wayneyip/fishtank/dev/docs/wayne_ocean_v1.png)
 
-A web-based interactive fish simulation built with Three.js and custom HLSL shaders. 
+A web-based interactive fish simulation built with Three.js and custom GLSL shaders. 
 
 Supports desktop, mobile and tablet for mouse and touch input.
 
@@ -12,7 +12,7 @@ Supports desktop, mobile and tablet for mouse and touch input.
 - **Custom caustics shaders**: The fish, ground, and water surface all use different custom HLSL shaders, each of which performs texture sampling in different ways (e.g. the fish samples the caustics texture in world space).
 
 ## Details
-**Languages**: JavaScript (Three.js), HLSL, HTML, CSS
-**Dev Server**: Vite
-**Hosting Platform**: Vercel
-**Author**: Wayne Yip
+- **Languages**: JavaScript (Three.js), GLSL, HTML, CSS
+- **Dev Server**: Vite
+- **Hosting Platform**: Vercel
+- **Author**: Wayne Yip
