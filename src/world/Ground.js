@@ -8,9 +8,9 @@ const groundCausticsTint		= new THREE.Vector4(0.5, 0.5, 0.6, 1.0)
 
 export default class Ground extends WorldObject
 {
-	constructor(resources)
+	constructor()
 	{
-		super(resources)
+		super()
 	}
 
 	initGeometry()
@@ -21,15 +21,15 @@ export default class Ground extends WorldObject
 	initMaterial()
 	{
 		// Textures
-		const groundDiffuse = this.resources.items['ground_c']
+		const groundDiffuse = this.world.resources.items['ground_c']
 		groundDiffuse.wrapS = THREE.RepeatWrapping
 		groundDiffuse.wrapT = THREE.RepeatWrapping
 
-		const groundNormal = this.resources.items['ground_n']
+		const groundNormal = this.world.resources.items['ground_n']
 		groundNormal.wrapS = THREE.RepeatWrapping
 		groundNormal.wrapT = THREE.RepeatWrapping
 
-		const groundCaustics = this.resources.items['shared_caustics']
+		const groundCaustics = this.world.resources.items['shared_caustics']
 		groundCaustics.wrapS = THREE.RepeatWrapping
 		groundCaustics.wrapT = THREE.RepeatWrapping
 

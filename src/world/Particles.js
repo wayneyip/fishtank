@@ -9,9 +9,9 @@ const particleSpeed 	= 0.001
 
 export default class Particles extends WorldObject
 {
-	constructor(resources)
+	constructor()
 	{
-		super(resources)
+		super()
 	}
 
 	initGeometry()
@@ -31,7 +31,7 @@ export default class Particles extends WorldObject
 
 	initMaterial()
 	{
-		const particlesDiffuse = this.resources.items['particles_a']
+		const particlesDiffuse = this.world.resources.items['particles_a']
 
 		return new THREE.PointsMaterial({
 			size  		: particleSize,

@@ -15,14 +15,14 @@ const boidSpawnRange 	= 2
 
 export default class Fish extends WorldObject
 {
-	constructor(resources)
+	constructor()
 	{
-		super(resources)
+		super()
 	}
 
 	initGeometry()
 	{
-		const gltf = this.resources.items['fish_model']
+		const gltf = this.world.resources.items['fish_model']
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry 
 		
@@ -34,8 +34,8 @@ export default class Fish extends WorldObject
 	initMaterial()
 	{
 		// Texture
-		const fishDiffuse = this.resources.items['fish_c']
-		const fishCaustics = this.resources.items['shared_caustics']
+		const fishDiffuse = this.world.resources.items['fish_c']
+		const fishCaustics = this.world.resources.items['shared_caustics']
 
 		// Material
 		const material = new THREE.MeshLambertMaterial({

@@ -21,10 +21,19 @@ const fogEnd = 150
 const cameraFOV = 55
 const cameraZPos = 5
 
+// Singleton setup
+let instance = null
+
 export default class World 
 {
 	constructor(canvas, screenSize)
 	{
+		if (instance)
+		{
+			return instance
+		}
+		instance = this
+
 		// Scene and lighting 
 		this.scene 			= this.initScene()
 		this.lighting 		= this.initLighting()

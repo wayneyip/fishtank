@@ -11,14 +11,14 @@ const godrayIntensity 	= 0.06
 
 export default class Godrays extends WorldObject
 {
-	constructor(resources, gui)
+	constructor()
 	{
-		super(resources)
+		super()
 	}
 
 	initGeometry()
 	{
-		const gltf = this.resources.items['godrays_model']
+		const gltf = this.world.resources.items['godrays_model']
 		const mesh = gltf.scene.children[0]
 		const geometry = mesh.geometry
 
@@ -28,7 +28,7 @@ export default class Godrays extends WorldObject
 	initMaterial()
 	{
 		// Texture
-		const noise = this.resources.items['shared_caustics']
+		const noise = this.world.resources.items['shared_caustics']
 
 		const material = new THREE.ShaderMaterial({
 			vertexShader: godraysVertexShader,
