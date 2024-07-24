@@ -96,20 +96,24 @@ export default class World
 	initWorldObjects()
 	{
 		let skybox, surface, fish, ground, particles, godrays
+		let worldObjects = []
 
 		this.resources.on('ready', () => {
 
 			// Skybox
 			skybox = new Skybox(this.resources)
 			this.scene.add(skybox.mesh)
+			worldObjects.push(skybox)
 
-			// Surface
+			// Water surface
 			surface = new Surface(this.resources)
 			this.scene.add(surface.mesh)
+			worldObjects.push(surface)
 			
 			// Godrays
 			godrays = new Godrays(this.resources)
 			this.scene.add(godrays.mesh)
+			worldObjects.push(godrays)
 
 			// Fish 
 			fish = new Fish(this.resources)
@@ -121,11 +125,15 @@ export default class World
 			// Ground
 			ground = new Ground(this.resources)
 			this.scene.add(ground.mesh)
+			worldObjects.push(ground)
 
 			// Particles
 			particles = new Particles(this.resources)
 			this.scene.add(particles.mesh)
+			worldObjects.push(particles)
 		})
+
+		return worldObjects
 	}
 
 	initCamera()
@@ -203,6 +211,13 @@ export default class World
 			// Animation
 			const elapsedTime = clock.getElapsedTime()
 
+			for (let worldObject of this.worldObjects)
+			{
+				if (worldObject)
+				{
+					worldObject.update(elapsedTime)
+				}
+			}
 			// if (fish)
 			// 	fish.update(elapsedTime, this.pointerRay)
 			// if (surface)
