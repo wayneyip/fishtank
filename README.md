@@ -1,10 +1,11 @@
 # Fish Simulation
-[Click here for the live project!](https://wayne-ocean.vercel.app/)
 ![screenshot](https://i.imgur.com/6dNS4d5.png)
 
 A web-based interactive fish simulation built with Three.js and custom GLSL shaders. 
 
 Supports desktop, mobile and tablet for mouse and touch input.
+
+[Click here for the live project!](https://wayne-ocean.vercel.app/)
 
 ## Features
 - **Boids simulation**: Fish movement is simulated based on [Craig Reynolds's boids algorithm](https://www.red3d.com/cwr/boids/), along with velocity limiting and bounds avoidance. 
