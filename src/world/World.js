@@ -186,10 +186,10 @@ export default class World
 			this.screenSize.width = window.innerWidth
 			this.screenSize.height = window.innerHeight
 
-			camera.aspect = this.screenSize.width / this.screenSize.height
-			camera.updateProjectionMatrix()
+			this.camera.aspect = this.screenSize.width / this.screenSize.height
+			this.camera.updateProjectionMatrix()
 
-			renderer.setSize(this.screenSize.width, this.screenSize.height)
+			this.renderer.setSize(this.screenSize.width, this.screenSize.height)
 		})
 	}
 
