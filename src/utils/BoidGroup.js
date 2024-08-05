@@ -3,7 +3,7 @@ import Boid from './Boid'
 import {randomNumber} from './MathUtils'
 
 const cohesionFactor 			= 0.00001
-const alignmentFactor 			= 0.01
+const alignmentFactor 			= 0.0075
 const separationFactor 			= 0.01
 const separationDistance		= 0.64
 const mouseAvoidanceDistance 	= 3.0
@@ -39,11 +39,6 @@ export default class BoidGroup
 	{
 		for (let boid of this.boids)
 		{
-			if (boid.mesh.material.userData.shader)
-			{
-				boid.mesh.material.userData.shader.uniforms.uTime.value = elapsedTime
-			}
-
 			this.perceivedCenter.set(0,0,0)
 			this.perceivedVelocity.set(0,0,0)
 			this.displacement.set(0,0,0)

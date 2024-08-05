@@ -1,13 +1,17 @@
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import WorldObject from '/utils/WorldObject'
 import BoidGroup from '/utils/BoidGroup'
+import {randomNumber} from '/utils/MathUtils'
+import fishVertexShader from '/shaders/fishVertex.glsl'
+import fishFragmentShader from '/shaders/fishFragment.glsl'
 
-const fishWaveAmplitude = 5.0
-const fishWavelength 	= 0.08
-const fishWaveSpeed 	= 15.0
-const fishWaveOffset 	= 0.0
-const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
-const fishCausticsScale	= 0.5 
+const fishWaveAmplitude 	= 5.0
+const fishWavelength 		= 0.08
+const fishWaveSpeed 		= 15.0
+const fishTint 				= new THREE.Vector4(1.0, 1.0, 2.2, 1.0)
+const fishCausticsScale		= 0.6 
+const fishCausticsStrength	= 0.6 
 
 const boidCount 		= 100
 const boidScale 		= 0.01
@@ -34,88 +38,27 @@ export default class Fish extends WorldObject
 	initMaterial()
 	{
 		// Texture
-		const fishDiffuse = this.world.resources.items['fish_c']
-		const fishCaustics = this.world.resources.items['shared_caustics']
 
 		// Material
-		const material = new THREE.MeshLambertMaterial({
-			map: fishDiffuse,
-			color: fishTint
+		this.uniforms = {
+			uAmplitude			: { value: fishWaveAmplitude },
+			uWavelength			: { value: fishWavelength },
+			uWaveSpeed			: { value: fishWaveSpeed },
+			uOffset				: { value: 0 },
+			uTime				: { value: 0 },
+			uTint 				: { value: fishTint },
+			uCausticsMap		: { value: null },
+			uCausticsScale		: { value: fishCausticsScale },
+			uCausticsStrength	: { value: fishCausticsStrength },
+		}
+
+		const material = new CustomShaderMaterial({
+			baseMaterial: THREE.MeshLambertMaterial,
+			vertexShader: fishVertexShader,
+			fragmentShader: fishFragmentShader,
+			silent: true,
+			uniforms: this.uniforms
 		})
-
-		const uniforms = {
-			uAmplitude		: { value: fishWaveAmplitude },
-			uWavelength		: { value: fishWavelength },
-			uWaveSpeed		: { value: fishWaveSpeed },
-			uOffset			: { value: fishWaveOffset },
-			uTime			: { value: 0 },
-			uCausticsMap	: { value: fishCaustics },
-			uCausticsScale	: { value: fishCausticsScale },
-		}
-
-		material.onBeforeCompile = (shader) =>
-		{
-			shader.uniforms.uAmplitude = uniforms.uAmplitude
-			shader.uniforms.uWavelength = uniforms.uWavelength
-			shader.uniforms.uWaveSpeed = uniforms.uWaveSpeed
-			shader.uniforms.uOffset = fishWaveOffset
-			shader.uniforms.uTime = uniforms.uTime
-			shader.uniforms.uCausticsMap = uniforms.uCausticsMap
-			shader.uniforms.uCausticsScale = uniforms.uCausticsScale
-			
-			// Vertex shader: parameters
-			shader.vertexShader = shader.vertexShader.replace(
-				'varying vec3 vViewPosition;',
-				`
-				varying vec3 vViewPosition;
-				varying vec2 vUv;
-
-				uniform float uAmplitude;
-				uniform float uWavelength;
-				uniform float uOffset;
-				uniform float uWaveSpeed;
-				uniform float uTime;
-				`
-			)
-			// Vertex shader: sine wave animation
-			shader.vertexShader = shader.vertexShader.replace(
-				'#include <begin_vertex>',
-				`
-				#include <begin_vertex>
-				transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
-				vUv = uv;
-				`
-			)
-			// Vertex shader: save world position to UV
-			shader.vertexShader = shader.vertexShader.replace(
-				'#include <worldpos_vertex>',
-				`
-				#include <worldpos_vertex>
-				vUv = worldPosition.xz;
-				`
-			) 
-			// Fragment shader: parameters
-			shader.fragmentShader = shader.fragmentShader.replace(
-				'uniform vec3 diffuse;',
-				`
-				varying vec2 vUv;
-				uniform vec3 diffuse;
-				uniform sampler2D uCausticsMap;
-				uniform float uCausticsScale;
-				`
-			)
-			// Fragment shader: apply caustics
-			shader.fragmentShader = shader.fragmentShader.replace(
-				'vec4 diffuseColor = vec4( diffuse, opacity );',
-				`
-				vec4 diffuseColor = vec4( diffuse, opacity );
-				diffuseColor += texture2D( uCausticsMap, vUv * uCausticsScale );
-				diffuseColor *= vec4(1.0, 1.0, 2.5, 1.0);
-				`
-			) 
-
-			material.userData.shader = shader
-		}
 
 		return material
 	}
@@ -124,9 +67,23 @@ export default class Fish extends WorldObject
 	{
 		this.meshes = []
 
+		const fishDiffuse = this.world.resources.items['fish_c']
+		const fishCaustics = this.world.resources.items['shared_caustics']
+
 		for (let i=0; i < boidCount; i++)
 		{
-			const mesh = new THREE.Mesh(this.geometry, this.material)	
+			// Clone material to give unique offsets to each fish 
+			const clonedMaterial = this.material.clone()
+
+			// Deep copy the uniforms
+			clonedMaterial.uniforms = JSON.parse(JSON.stringify(this.uniforms))
+
+			// Handle textures
+			clonedMaterial.uniforms.uOffset.value = randomNumber(0, 1000)
+			clonedMaterial.uniforms.uCausticsMap.value = fishCaustics
+			clonedMaterial.map = fishDiffuse
+
+			const mesh = new THREE.Mesh(this.geometry, clonedMaterial)
 			mesh.castShadow = true
 			mesh.receiveShadow = true
 			this.meshes.push(mesh)
@@ -139,6 +96,11 @@ export default class Fish extends WorldObject
 
 	update(elapsedTime)
 	{
+		for (let mesh of this.meshes)
+		{
+			mesh.material.uniforms.uTime.value = elapsedTime
+		}
+
 		this.boidGroup.simulate(elapsedTime, this.world.pointerRay)
 	}
 }
