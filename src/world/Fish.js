@@ -41,13 +41,6 @@ export default class Fish extends WorldObject
 		const fishCaustics = this.world.resources.items['shared_caustics']
 
 		// Material
-		const newMaterial = new CustomShaderMaterial({
-			baseMaterial: THREE.MeshLambertMaterial,
-			vertexShader: fishVertexShader,
-			fragmentShader: fishFragmentShader,
-			silent: true
-		})
-
 		const material = new THREE.MeshLambertMaterial({
 			map: fishDiffuse,
 			color: fishTint
@@ -62,6 +55,16 @@ export default class Fish extends WorldObject
 			uCausticsMap	: { value: fishCaustics },
 			uCausticsScale	: { value: fishCausticsScale },
 		}
+
+		const newMaterial = new CustomShaderMaterial({
+			baseMaterial: THREE.MeshLambertMaterial,
+			vertexShader: fishVertexShader,
+			fragmentShader: fishFragmentShader,
+			silent: true,
+			uniforms: uniforms,
+			map: fishDiffuse,
+			color: fishTint
+		})
 
 		material.onBeforeCompile = (shader) =>
 		{
