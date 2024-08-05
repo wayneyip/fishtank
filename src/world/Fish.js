@@ -1,6 +1,9 @@
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import WorldObject from '/utils/WorldObject'
 import BoidGroup from '/utils/BoidGroup'
+import fishVertexShader from '/shaders/fishVertex.glsl'
+import fishFragmentShader from '/shaders/fishFragment.glsl'
 
 const fishWaveAmplitude = 5.0
 const fishWavelength 	= 0.08
@@ -38,6 +41,13 @@ export default class Fish extends WorldObject
 		const fishCaustics = this.world.resources.items['shared_caustics']
 
 		// Material
+		const newMaterial = new CustomShaderMaterial({
+			baseMaterial: THREE.MeshLambertMaterial,
+			vertexShader: fishVertexShader,
+			fragmentShader: fishFragmentShader,
+			silent: true
+		})
+
 		const material = new THREE.MeshLambertMaterial({
 			map: fishDiffuse,
 			color: fishTint
@@ -117,7 +127,7 @@ export default class Fish extends WorldObject
 			material.userData.shader = shader
 		}
 
-		return material
+		return newMaterial
 	}
 
 	initMesh()
