@@ -139,6 +139,17 @@ export default class Fish extends WorldObject
 
 	update(elapsedTime)
 	{
+		if (this.boidGroup)
+		{
+			for (let boid of this.boidGroup.boids)
+			{
+				if (boid.mesh.material.userData.shader)
+				{
+					boid.mesh.material.userData.shader.uniforms.uTime.value = elapsedTime
+				}
+			}
+		}
+
 		this.boidGroup.simulate(elapsedTime, this.world.pointerRay)
 	}
 }
