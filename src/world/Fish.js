@@ -9,9 +9,9 @@ import fishFragmentShader from '/shaders/fishFragment.glsl'
 const fishWaveAmplitude 	= 5.0
 const fishWavelength 		= 0.08
 const fishWaveSpeed 		= 15.0
-const fishTint 				= new THREE.Vector4(1.0, 1.0, 2.5, 1.0)
+const fishTint 				= new THREE.Vector4(1.0, 1.0, 2.2, 1.0)
 const fishCausticsScale		= 0.6 
-const fishCausticsStrength	= 0.5 
+const fishCausticsStrength	= 0.6 
 
 const boidCount 		= 100
 const boidScale 		= 0.01
