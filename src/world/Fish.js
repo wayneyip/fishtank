@@ -46,7 +46,7 @@ export default class Fish extends WorldObject
 			color: fishTint
 		})
 
-		const uniforms = {
+		this.uniforms = {
 			uAmplitude		: { value: fishWaveAmplitude },
 			uWavelength		: { value: fishWavelength },
 			uWaveSpeed		: { value: fishWaveSpeed },
@@ -61,7 +61,7 @@ export default class Fish extends WorldObject
 			vertexShader: fishVertexShader,
 			fragmentShader: fishFragmentShader,
 			silent: true,
-			uniforms: uniforms,
+			uniforms: this.uniforms,
 			map: fishDiffuse,
 			color: fishTint
 		})
@@ -152,16 +152,7 @@ export default class Fish extends WorldObject
 
 	update(elapsedTime)
 	{
-		if (this.boidGroup)
-		{
-			for (let boid of this.boidGroup.boids)
-			{
-				if (boid.mesh.material.userData.shader)
-				{
-					boid.mesh.material.userData.shader.uniforms.uTime.value = elapsedTime
-				}
-			}
-		}
+		this.uniforms.uTime.value = elapsedTime
 
 		this.boidGroup.simulate(elapsedTime, this.world.pointerRay)
 	}
