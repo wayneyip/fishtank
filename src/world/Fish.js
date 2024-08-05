@@ -42,10 +42,6 @@ export default class Fish extends WorldObject
 		const fishCaustics = this.world.resources.items['shared_caustics']
 
 		// Material
-		const material = new THREE.MeshLambertMaterial({
-			map: fishDiffuse
-		})
-
 		this.uniforms = {
 			uAmplitude			: { value: fishWaveAmplitude },
 			uWavelength			: { value: fishWavelength },
@@ -58,7 +54,7 @@ export default class Fish extends WorldObject
 			uCausticsStrength	: { value: fishCausticsStrength },
 		}
 
-		const newMaterial = new CustomShaderMaterial({
+		const material = new CustomShaderMaterial({
 			baseMaterial: THREE.MeshLambertMaterial,
 			vertexShader: fishVertexShader,
 			fragmentShader: fishFragmentShader,
@@ -67,72 +63,7 @@ export default class Fish extends WorldObject
 			map: fishDiffuse
 		})
 
-		material.onBeforeCompile = (shader) =>
-		{
-			shader.uniforms.uAmplitude = uniforms.uAmplitude
-			shader.uniforms.uWavelength = uniforms.uWavelength
-			shader.uniforms.uWaveSpeed = uniforms.uWaveSpeed
-			shader.uniforms.uOffset = fishWaveOffset
-			shader.uniforms.uTime = uniforms.uTime
-			shader.uniforms.uCausticsMap = uniforms.uCausticsMap
-			shader.uniforms.uCausticsScale = uniforms.uCausticsScale
-			shader.uniforms.uCausticsStrength = uniforms.uCausticsStrength
-			
-			// Vertex shader: parameters
-			shader.vertexShader = shader.vertexShader.replace(
-				'varying vec3 vViewPosition;',
-				`
-				varying vec3 vViewPosition;
-				varying vec2 vUv;
-
-				uniform float uAmplitude;
-				uniform float uWavelength;
-				uniform float uOffset;
-				uniform float uWaveSpeed;
-				uniform float uTime;
-				`
-			)
-			// Vertex shader: sine wave animation
-			shader.vertexShader = shader.vertexShader.replace(
-				'#include <begin_vertex>',
-				`
-				#include <begin_vertex>
-				transformed.x += uAmplitude * sin(uWavelength * (transformed.z + uOffset) + uWaveSpeed * uTime);
-				vUv = uv;
-				`
-			)
-			// Vertex shader: save world position to UV
-			shader.vertexShader = shader.vertexShader.replace(
-				'#include <worldpos_vertex>',
-				`
-				#include <worldpos_vertex>
-				vUv = worldPosition.xz;
-				`
-			) 
-			// Fragment shader: parameters
-			shader.fragmentShader = shader.fragmentShader.replace(
-				'uniform vec3 diffuse;',
-				`
-				varying vec2 vUv;
-				uniform vec3 diffuse;
-				uniform sampler2D uCausticsMap;
-				uniform float uCausticsScale;
-				`
-			)
-			// Fragment shader: apply caustics
-			shader.fragmentShader = shader.fragmentShader.replace(
-				'vec4 diffuseColor = vec4( diffuse, opacity );',
-				`
-				vec4 diffuseColor = vec4( diffuse, opacity );
-				diffuseColor += texture2D( uCausticsMap, vUv * uCausticsScale );
-				diffuseColor *= vec4(1.0, 1.0, 2.5, 1.0);
-				`
-			) 
-
-			material.userData.shader = shader
-		}
-
-		return newMaterial
+		return material
 	}
 
 	initMesh()
