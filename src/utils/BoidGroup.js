@@ -3,7 +3,7 @@ import Boid from './Boid'
 import {randomNumber} from './MathUtils'
 
 const cohesionFactor 			= 0.00001
-const alignmentFactor 			= 0.01
+const alignmentFactor 			= 0.0075
 const separationFactor 			= 0.01
 const separationDistance		= 0.64
 const mouseAvoidanceDistance 	= 3.0
