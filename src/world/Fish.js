@@ -5,12 +5,13 @@ import BoidGroup from '/utils/BoidGroup'
 import fishVertexShader from '/shaders/fishVertex.glsl'
 import fishFragmentShader from '/shaders/fishFragment.glsl'
 
-const fishWaveAmplitude = 5.0
-const fishWavelength 	= 0.08
-const fishWaveSpeed 	= 15.0
-const fishWaveOffset 	= 0.0
-const fishTint 			= new THREE.Vector4(0.7, 0.7, 1.0, 1.0)
-const fishCausticsScale	= 0.5 
+const fishWaveAmplitude 	= 5.0
+const fishWavelength 		= 0.08
+const fishWaveSpeed 		= 15.0
+const fishWaveOffset 		= 0.0
+const fishTint 				= new THREE.Vector4(1.0, 1.0, 2.5, 1.0)
+const fishCausticsScale		= 0.5 
+const fishCausticsStrength	= 0.8 
 
 const boidCount 		= 100
 const boidScale 		= 0.01
@@ -42,18 +43,19 @@ export default class Fish extends WorldObject
 
 		// Material
 		const material = new THREE.MeshLambertMaterial({
-			map: fishDiffuse,
-			color: fishTint
+			map: fishDiffuse
 		})
 
 		this.uniforms = {
-			uAmplitude		: { value: fishWaveAmplitude },
-			uWavelength		: { value: fishWavelength },
-			uWaveSpeed		: { value: fishWaveSpeed },
-			uOffset			: { value: fishWaveOffset },
-			uTime			: { value: 0 },
-			uCausticsMap	: { value: fishCaustics },
-			uCausticsScale	: { value: fishCausticsScale },
+			uAmplitude			: { value: fishWaveAmplitude },
+			uWavelength			: { value: fishWavelength },
+			uWaveSpeed			: { value: fishWaveSpeed },
+			uOffset				: { value: fishWaveOffset },
+			uTime				: { value: 0 },
+			uTint 				: { value: fishTint },
+			uCausticsMap		: { value: fishCaustics },
+			uCausticsScale		: { value: fishCausticsScale },
+			uCausticsStrength	: { value: fishCausticsStrength },
 		}
 
 		const newMaterial = new CustomShaderMaterial({
@@ -62,8 +64,7 @@ export default class Fish extends WorldObject
 			fragmentShader: fishFragmentShader,
 			silent: true,
 			uniforms: this.uniforms,
-			map: fishDiffuse,
-			color: fishTint
+			map: fishDiffuse
 		})
 
 		material.onBeforeCompile = (shader) =>
@@ -75,6 +76,7 @@ export default class Fish extends WorldObject
 			shader.uniforms.uTime = uniforms.uTime
 			shader.uniforms.uCausticsMap = uniforms.uCausticsMap
 			shader.uniforms.uCausticsScale = uniforms.uCausticsScale
+			shader.uniforms.uCausticsStrength = uniforms.uCausticsStrength
 			
 			// Vertex shader: parameters
 			shader.vertexShader = shader.vertexShader.replace(
