@@ -79,16 +79,13 @@ export default class BoidGroup
 			{
 				// Get the vector from boid to mouse ray
 				rayToAvoid.closestPointToPoint(boid.mesh.position, this.closestPointToRay)
-				const boidToRayVec = this.closestPointToRay.sub(boid.mesh.position).normalize()
+				const boidToRayVec = this.closestPointToRay.sub(boid.mesh.position)
 				//
 				// Get distance from boid to mouse ray
 				const boidSqDistanceToRay = rayToAvoid.distanceSqToPoint(boid.mesh.position)
 				//
-				// Get the boid's facing direction
-				this.boidDirection.copy(boid.velocity).normalize()
-				//
 				// If boid is approaching mouse ray...
-				const isFacingRay = this.boidDirection.dot(boidToRayVec) > 0
+				const isFacingRay = boid.velocity.dot(boidToRayVec) > 0
 				const isCloseToRay = boidSqDistanceToRay < mouseAvoidanceDistance
 				if (isFacingRay && isCloseToRay)
 				{
